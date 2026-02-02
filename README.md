@@ -1,6 +1,6 @@
 # Macro Meal Planner API
 Backend API for weekly meal planning with macro focus(calories and protein).
-Build with Java + Spring Boot, Docker, PostgreSQL and ntrition API integration.
+Build with Java + Spring Boot, Docker, PostgreSQL and nutrition API integration.
 
 ## Tech
 - Java
