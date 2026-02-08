@@ -34,7 +34,7 @@ public class FoodItem {
      * Quantity in grams
      */
     @Column(name="quantity_grams", nullable = false)
-    private BigDecimal quantityGrams;
+    private int quantityGrams;
 
     /**
      * The total calories in kcal
@@ -46,7 +46,7 @@ public class FoodItem {
      * The total protein in grams
      */
     @Column(nullable = false)
-    private int protein;
+    private BigDecimal protein;
 
     /**
      * The source for the nutrient information

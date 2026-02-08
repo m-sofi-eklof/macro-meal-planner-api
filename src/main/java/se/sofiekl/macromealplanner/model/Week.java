@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(name="weeks",
-uniqueConstraints ={ @UniqueConstraint(columnNames={"user_id", "year", "week_number"})}
+uniqueConstraints ={ @UniqueConstraint(columnNames={"user_id", "year_value", "week_number"})}
 )
 @NoArgsConstructor
 @Getter
@@ -32,7 +32,7 @@ public class Week {
     /**
      * The year the week is in.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, name="year_value") //year conflicting key word
     private int year;
 
     /**
