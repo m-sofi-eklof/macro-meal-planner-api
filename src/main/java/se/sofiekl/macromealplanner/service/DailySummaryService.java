@@ -24,10 +24,8 @@ public class DailySummaryService {
 
     public DailySummaryDTO getDailySummary(Long userId, LocalDate date) {
         //gets all meals of the day
-        LocalDateTime startOfDay = date.atStartOfDay();
-        LocalDateTime endOfDay = date.atTime(23, 59, 59);
 
-        var meals = mealRepository.findAllByUserIdAndDateBetween(userId, startOfDay, endOfDay);
+        var meals = mealRepository.findAllByUserIdAndDay_DateBetween(userId, date, date);
 
         //calculate total calories and protein
         int totalCalories = meals.stream()

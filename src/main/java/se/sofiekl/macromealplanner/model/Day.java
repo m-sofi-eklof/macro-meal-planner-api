@@ -39,4 +39,15 @@ public class Day {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "week_id", nullable = false)
     private Week week;
+
+
+    /**
+     * The user who is logging the day.
+     * @see User
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
 }

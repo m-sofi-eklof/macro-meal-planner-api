@@ -41,8 +41,8 @@ public class FoodItemRepositoryTest {
 
         FoodItem foodItem = new FoodItem();
         foodItem.setName("Test food item");
-        foodItem.setCalories(10);
-        foodItem.setProtein(new BigDecimal("10.00"));
+        foodItem.setCalories(100);
+        foodItem.setProtein(10.0);
         foodItem.setQuantityGrams(100);
         foodItem.setSource(FoodSource.MANUAL);
         foodItem.setMeal(testMeal);

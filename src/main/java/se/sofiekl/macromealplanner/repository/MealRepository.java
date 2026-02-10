@@ -3,18 +3,17 @@ package se.sofiekl.macromealplanner.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import se.sofiekl.macromealplanner.model.Meal;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MealRepository extends JpaRepository<Meal,Long> {
 
     /**
-     * Finds all meals for a specific day
+     * Finds all meals for a specific day and user
      */
-    List<Meal> findAllByUserIdAndDateBetween(
+    List<Meal> findAllByUserIdAndDay_DateBetween(
             Long userId,
-            LocalDateTime startOfDay,
-            LocalDateTime endOfDay
+            LocalDate startOfDay,
+            LocalDate endOfDay
     );
 }
