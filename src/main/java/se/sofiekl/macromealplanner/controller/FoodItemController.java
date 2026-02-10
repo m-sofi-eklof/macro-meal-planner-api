@@ -2,8 +2,8 @@ package se.sofiekl.macromealplanner.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import se.sofiekl.macromealplanner.dto.FoodItemRequestDTO;
-import se.sofiekl.macromealplanner.dto.FoodItemResponseDTO;
+import se.sofiekl.macromealplanner.dto.foodSearchFlow.FoodItemRequestDTO;
+import se.sofiekl.macromealplanner.dto.foodSearchFlow.FoodItemResponseDTO;
 import se.sofiekl.macromealplanner.service.FoodItemService;
 
 @RestController

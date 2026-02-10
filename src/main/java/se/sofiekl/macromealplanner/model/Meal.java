@@ -43,4 +43,12 @@ public class Meal {
     @Column(name = "order_index", nullable = false)
     private int orderIndex;
 
+    /**
+     * The user who is logging the meal.
+     * @see User
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 }

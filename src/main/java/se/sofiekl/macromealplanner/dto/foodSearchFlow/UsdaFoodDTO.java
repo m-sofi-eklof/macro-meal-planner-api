@@ -1,6 +1,7 @@
-package se.sofiekl.macromealplanner.dto;
+package se.sofiekl.macromealplanner.dto.foodSearchFlow;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

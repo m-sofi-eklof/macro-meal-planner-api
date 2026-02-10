@@ -1,4 +1,4 @@
-package se.sofiekl.macromealplanner.dto;
+package se.sofiekl.macromealplanner.dto.foodSearchFlow;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +11,6 @@ public record FoodItemRequestDTO(
         @NotBlank String name,
         @Positive int quantityGrams,
         @Positive int calories,
-        @Positive BigDecimal protein,
+        @Positive Double protein,
         @NotNull FoodSource source
 ) {}

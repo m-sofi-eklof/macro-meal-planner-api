@@ -1,4 +1,4 @@
-package se.sofiekl.macromealplanner.dto;
+package se.sofiekl.macromealplanner.dto.foodSearchFlow;
 
 public record NutritionSearchResponseDTO(
         String name,

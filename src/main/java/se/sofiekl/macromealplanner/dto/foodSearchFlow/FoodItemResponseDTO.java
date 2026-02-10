@@ -1,4 +1,4 @@
-package se.sofiekl.macromealplanner.dto;
+package se.sofiekl.macromealplanner.dto.foodSearchFlow;
 
 import se.sofiekl.macromealplanner.model.FoodSource;
 
@@ -9,7 +9,7 @@ public record FoodItemResponseDTO(
         String name,
         int quantityGrams,
         int calories,
-        BigDecimal protein,
+        Double protein,
         FoodSource source,
         Long mealId
 ){}

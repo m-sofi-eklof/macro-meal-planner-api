@@ -1,8 +1,8 @@
 package se.sofiekl.macromealplanner.service;
 
 import org.springframework.stereotype.Service;
-import se.sofiekl.macromealplanner.dto.FoodItemRequestDTO;
-import se.sofiekl.macromealplanner.dto.FoodItemResponseDTO;
+import se.sofiekl.macromealplanner.dto.foodSearchFlow.FoodItemRequestDTO;
+import se.sofiekl.macromealplanner.dto.foodSearchFlow.FoodItemResponseDTO;
 import se.sofiekl.macromealplanner.mapper.FoodItemMapper;
 import se.sofiekl.macromealplanner.model.FoodItem;
 import se.sofiekl.macromealplanner.model.Meal;

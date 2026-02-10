@@ -2,9 +2,9 @@ package se.sofiekl.macromealplanner.service;
 
 import org.springframework.stereotype.Service;
 import se.sofiekl.macromealplanner.client.UsdaFoodDataClient;
-import se.sofiekl.macromealplanner.dto.NutritionSearchResponseDTO;
-import se.sofiekl.macromealplanner.dto.UsdaFoodItemDTO;
-import se.sofiekl.macromealplanner.dto.UsdaFoodNutrientDTO;
+import se.sofiekl.macromealplanner.dto.foodSearchFlow.NutritionSearchResponseDTO;
+import se.sofiekl.macromealplanner.dto.foodSearchFlow.UsdaFoodItemDTO;
+import se.sofiekl.macromealplanner.dto.foodSearchFlow.UsdaFoodNutrientDTO;
 
 import java.util.List;
 

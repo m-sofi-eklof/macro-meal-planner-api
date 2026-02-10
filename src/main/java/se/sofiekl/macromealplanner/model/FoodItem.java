@@ -46,7 +46,7 @@ public class FoodItem {
      * The total protein in grams
      */
     @Column(nullable = false)
-    private BigDecimal protein;
+    private Double protein;
 
     /**
      * The source for the nutrient information
