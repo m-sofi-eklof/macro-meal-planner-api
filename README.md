@@ -7,17 +7,17 @@ The goal is to plan meals according to personal goals and track **calories** and
 - Spring Boot
 - PostgreSQL
 - Docker / docker-compose
+- USDA FoodData Central api
 - (Planned) Spring Security + JWT
-- (Planned) API Ninjas Nutrition API integration
 
 ## Status
 This project is under active development.
 
 ### Roadmap
 - [x] Core model (User, Week, Day, Meal, FoodItem)
-- [ ] Local dev setup with PostgreSQL (docker-compose)
+- [x] Local dev setup with PostgreSQL (docker-compose)
 - [ ] Authentication (BCrypt + JWT)
-- [ ] Nutrition lookup via API ninjas
+- [x] Nutrition lookup via USDA FoodData
 - [ ] Cloud deployment (AWS or similar)
 
 
