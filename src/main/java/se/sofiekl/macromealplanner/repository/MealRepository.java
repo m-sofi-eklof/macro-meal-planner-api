@@ -16,4 +16,6 @@ public interface MealRepository extends JpaRepository<Meal,Long> {
             LocalDate startOfDay,
             LocalDate endOfDay
     );
+
+    List<Meal> getMealById(Long id);
 }

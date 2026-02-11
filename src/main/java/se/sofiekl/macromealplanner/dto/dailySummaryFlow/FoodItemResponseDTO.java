@@ -1,8 +1,6 @@
-package se.sofiekl.macromealplanner.dto.foodSearchFlow;
+package se.sofiekl.macromealplanner.dto.dailySummaryFlow;
 
 import se.sofiekl.macromealplanner.model.FoodSource;
-
-import java.math.BigDecimal;
 
 public record FoodItemResponseDTO(
         Long id,
