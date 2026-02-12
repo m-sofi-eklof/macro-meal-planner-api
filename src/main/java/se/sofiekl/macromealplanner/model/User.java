@@ -41,7 +41,7 @@ public class User {
      * The user's protein goal in grams
      */
     @Column(name = "protein_goal")
-    private Integer proteinGoal;
+    private Double proteinGoal;
 
     /**
      * The user's calorie goal in kcal
