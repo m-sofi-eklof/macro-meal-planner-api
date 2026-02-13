@@ -10,6 +10,7 @@ import se.sofiekl.macromealplanner.mapper.DayMapper;
 import se.sofiekl.macromealplanner.mapper.MealMapper;
 import se.sofiekl.macromealplanner.model.Day;
 import se.sofiekl.macromealplanner.model.User;
+import se.sofiekl.macromealplanner.model.Week;
 import se.sofiekl.macromealplanner.repository.DayRepository;
 import se.sofiekl.macromealplanner.repository.UserRepository;
 
@@ -41,7 +42,7 @@ public class DayService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new EntityNotFoundException("User not found with id: " + userId));
 
-        //Check day exists
+        //Check day already exists
         Day existingDay = dayRepository.findByUserIdAndDate(userId, request.date())
                 .orElse(null);
         if (existingDay != null) {

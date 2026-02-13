@@ -33,13 +33,11 @@ public class Day {
     private LocalDate date;
 
     /**
-     * The week the day exists within
-     * @see Week
+     * The week the day belongs to
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "week_id", nullable = false)
     private Week week;
-
 
     /**
      * The user who is logging the day.
