@@ -18,7 +18,7 @@ This project is under active development.
 - [x] Local dev setup with PostgreSQL (docker-compose)
 - [x] Authentication (BCrypt + JWT)
 - [x] Nutrition lookup via USDA FoodData
-- [ ] Cloud deployment (AWS or similar)
+- [x] Cloud deployment (AWS or similar)
 
 
 ## API endpoints
@@ -59,12 +59,13 @@ This project is under active development.
 ## Quick start (local)
 ### Requirements
 - Java 21
-- Maven (or use Maven wrapper)
-- Docker (for PostgreSQL via docker-compose)
+- Docker (optional)
 
 ## Configuration
 Environment variables are documented in `.env.example`.
 
-### Run the API 
+### Run the API
 ```bash
 ./mvnw spring-boot:run
+```
+
