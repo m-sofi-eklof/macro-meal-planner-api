@@ -1,6 +1,8 @@
 package se.sofiekl.macromealplanner.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.sofiekl.macromealplanner.dto.usda.NutritionSearchRequestDTO;
 import se.sofiekl.macromealplanner.dto.usda.NutritionSearchResponseDTO;
@@ -19,11 +21,11 @@ public class NutritionController {
     }
 
     @GetMapping("/search")
-    public List<NutritionSearchResponseDTO> search(
+    public ResponseEntity<List<NutritionSearchResponseDTO>> search(
             @Valid
             @RequestBody
             NutritionSearchRequestDTO dto
     ){
-        return nutritionService.search(dto.query());
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(nutritionService.search(dto.query()));
     }
 }

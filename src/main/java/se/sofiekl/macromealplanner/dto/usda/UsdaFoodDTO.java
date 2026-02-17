@@ -8,5 +8,5 @@ import java.util.List;
 public record UsdaFoodDTO(
         Long fdcId,
         String description,
-        List<UsdaFoodNutrientDTO> foodNutrients
+        List<UsdaFoodNutrientDetailDTO> foodNutrients
 ) {}

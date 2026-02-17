@@ -74,7 +74,7 @@ public class FoodItemService {
             if(nutrition == null){
                 throw new EntityNotFoundException("Nutrition not found for food item with id: " + request.fdcId());
             }
-            foodItem = mapper.toFoodItemUSDA(nutrition, meal, user);
+            foodItem = mapper.toFoodItemUSDA(nutrition, meal, user, request.quantityGrams());
         }
 
         FoodItem savedFoodItem = foodItemRepository.save(foodItem);

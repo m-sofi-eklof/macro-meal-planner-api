@@ -34,13 +34,13 @@ public class FoodItem {
      * Quantity in grams
      */
     @Column(name="quantity_grams", nullable = false)
-    private int quantityGrams;
+    private Integer quantityGrams;
 
     /**
      * The total calories in kcal
      */
     @Column(nullable = false)
-    private int calories;
+    private Integer calories;
 
     /**
      * The total protein in grams

@@ -49,20 +49,34 @@ public class NutritionService{
     }
 
     private NutritionSearchResponseDTO mapToNutritionResponseFromFoodItemDTO(UsdaFoodItemDTO food){
+
         Integer calories = extractNutrientValue(food.foodNutrients(), ENERGY_KCAL_ID);
         Double protein = extractNutrientValueDouble(food.foodNutrients(), PROTEIN_ID);
 
-        return new NutritionSearchResponseDTO(food.description(), calories,protein);
+        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories,protein);
     }
 
     private NutritionSearchResponseDTO mapToNutritionResponseFromFoodDTO(UsdaFoodDTO food){
         if (food.foodNutrients()==null || food.foodNutrients().isEmpty()){
             return null;
         }
-        Integer calories = extractNutrientValue(food.foodNutrients(), ENERGY_KCAL_ID);
-        Double protein = extractNutrientValueDouble(food.foodNutrients(), PROTEIN_ID);
 
-        return new NutritionSearchResponseDTO(food.description(), calories,protein);
+        Integer calories = food.foodNutrients()
+                .stream()
+                .filter(n->n.nutrient()!=null && ENERGY_KCAL_ID.equals(n.nutrient().id()))
+                .map(UsdaFoodNutrientDetailDTO::amount)
+                .map(Double::intValue)
+                .findFirst()
+                .orElse(null);
+
+        Double protein = food.foodNutrients()
+                .stream()
+                .filter(n->n.nutrient()!=null && PROTEIN_ID.equals(n.nutrient().id()))
+                .map(UsdaFoodNutrientDetailDTO::amount)
+                .findFirst()
+                .orElse(null);
+
+        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories,protein);
     }
 
     private Integer extractNutrientValue(List<UsdaFoodNutrientDTO> nutrients, Integer nutrientId){

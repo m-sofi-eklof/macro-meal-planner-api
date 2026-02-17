@@ -45,7 +45,7 @@ public class FoodItemMapper {
         return foodItem;
     }
 
-    public FoodItem toFoodItemUSDA(NutritionSearchResponseDTO dto, Meal meal, User user){
+    public FoodItem toFoodItemUSDA(NutritionSearchResponseDTO dto, Meal meal, User user, Integer quantityGrams){
         FoodItem foodItem = new FoodItem();
         foodItem.setSource(FoodSource.USDA);
         foodItem.setMeal(meal);
@@ -53,6 +53,7 @@ public class FoodItemMapper {
         foodItem.setProtein(dto.protein());
         foodItem.setCalories(dto.calories());
         foodItem.setName(dto.name());
+        foodItem.setQuantityGrams(quantityGrams);
         return foodItem;
     }
 }
