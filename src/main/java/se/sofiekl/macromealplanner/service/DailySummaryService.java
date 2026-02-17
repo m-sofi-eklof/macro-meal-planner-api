@@ -2,7 +2,7 @@ package se.sofiekl.macromealplanner.service;
 
 import org.springframework.stereotype.Service;
 import se.sofiekl.macromealplanner.dto.dailySummaryFlow.DailySummaryDTO;
-import se.sofiekl.macromealplanner.dto.dailySummaryFlow.MacroGoalsDTO;
+import se.sofiekl.macromealplanner.dto.MacroGoalsDTO;
 import se.sofiekl.macromealplanner.dto.dailySummaryFlow.MacroProgressDTO;
 import se.sofiekl.macromealplanner.dto.dailySummaryFlow.MacroTotalsDTO;
 import se.sofiekl.macromealplanner.model.FoodItem;
@@ -10,7 +10,6 @@ import se.sofiekl.macromealplanner.repository.FoodItemRepository;
 import se.sofiekl.macromealplanner.repository.MealRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 public class DailySummaryService {

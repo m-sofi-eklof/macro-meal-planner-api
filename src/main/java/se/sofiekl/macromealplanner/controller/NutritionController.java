@@ -2,8 +2,8 @@ package se.sofiekl.macromealplanner.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import se.sofiekl.macromealplanner.dto.foodSearchFlow.NutritionSearchRequestDTO;
-import se.sofiekl.macromealplanner.dto.foodSearchFlow.NutritionSearchResponseDTO;
+import se.sofiekl.macromealplanner.dto.usda.NutritionSearchRequestDTO;
+import se.sofiekl.macromealplanner.dto.usda.NutritionSearchResponseDTO;
 import se.sofiekl.macromealplanner.service.NutritionService;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class NutritionController {
         this.nutritionService = nutritionService;
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public List<NutritionSearchResponseDTO> search(
             @Valid
             @RequestBody

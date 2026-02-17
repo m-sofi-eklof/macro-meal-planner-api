@@ -63,4 +63,13 @@ public class FoodItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meal_id", nullable = false)
     private Meal meal;
+
+    /**
+     * The user who is logging the Food Item.
+     * @see User
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 }

@@ -1,4 +1,4 @@
-package se.sofiekl.macromealplanner.dto.foodSearchFlow;
+package se.sofiekl.macromealplanner.dto.usda;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

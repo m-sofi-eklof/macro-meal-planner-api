@@ -47,5 +47,12 @@ public class Day {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    /**
+     * Meals in the day
+     * @see Meal
+     */
+    @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Meal> meals = new ArrayList<>();
+
 
 }

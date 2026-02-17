@@ -2,6 +2,7 @@ package se.sofiekl.macromealplanner.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import se.sofiekl.macromealplanner.dto.MealRequestDTO;
 import se.sofiekl.macromealplanner.dto.MealResponseDTO;
@@ -34,16 +35,19 @@ public class MealService {
 
     /**
      * Create a meal for a specific day
-     * @param userId The user who is logging the meal
      * @param dayId The day the meal belongs to
      * @param request The request data of the meal
      * @return A meal response dto
      */
     @Transactional
-    public MealResponseDTO createMeal(Long userId, Long dayId, MealRequestDTO request){
-        //get user
-        User user = userRepository.findById(userId)
-                .orElseThrow(()->new EntityNotFoundException("User not found with id:" + userId));
+    public MealResponseDTO createMeal(Long dayId, MealRequestDTO request){
+
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
 
         //get day
         Day day = dayRepository.findById(dayId)
@@ -66,11 +70,17 @@ public class MealService {
 
     /**
      * Get all meals for a specific day.
-     * @param userId The user who logged the day
      * @param dayId The id of the day
      * @return A list of meal response data transfer objects
      */
-    public List<MealResponseDTO> getAllMealsForDay(Long userId, Long dayId){
+    public List<MealResponseDTO> getAllMealsForDay( Long dayId){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         //verify day exists and belongs to user
         Day day = dayRepository.findById(dayId)
                 .orElseThrow(()->new EntityNotFoundException("Day not found with id:" + dayId));
@@ -79,11 +89,7 @@ public class MealService {
         }
 
         //get meals
-        List<Meal> meals = mealRepository.findAllByUserIdAndDay_DateBetween(
-                userId,
-                day.getDate(),
-                day.getDate()
-        );
+        List<Meal> meals = mealRepository.findAllByDayId(dayId);
 
         return meals.stream()
                 .map(mealMapper::toMealResponseDTO)
@@ -92,14 +98,21 @@ public class MealService {
 
     /**
      * Get a specific meal.
-     * @param userId The id of the user who logged the meal
      * @param mealId The id of the meal.
      * @return A MealResponseDTO of the meal
      */
-    public MealResponseDTO getMeal(Long userId, Long mealId){
+    public MealResponseDTO getMeal(Long mealId){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         //find or throw exception
         Meal meal = mealRepository.findById(mealId)
                 .orElseThrow(()->new EntityNotFoundException("Meal not found with id:" + mealId));
+
         //verify meal belongs to user
         if (!meal.getUser().getId().equals(userId)){
             throw new IllegalArgumentException("Meal does not belong to user");
@@ -110,7 +123,14 @@ public class MealService {
     }
 
     @Transactional
-    public void deleteMeal(Long userId, Long mealId){
+    public void deleteMeal(Long mealId){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         Meal meal = mealRepository.findById(mealId)
                 .orElseThrow(()->new EntityNotFoundException("Meal not found with id:" + mealId));
         if (!meal.getUser().getId().equals(userId)){

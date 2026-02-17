@@ -29,4 +29,12 @@ public interface DayRepository extends JpaRepository<Day,Long> {
             LocalDate start,
             LocalDate end
     );
+
+    /**
+     * Find all days belonging to a specific week
+     * @param weekId The ID of the Week
+     * @return A list of Day objects
+     */
+    List<Day> findAllByWeekId(Long weekId);
+
 }

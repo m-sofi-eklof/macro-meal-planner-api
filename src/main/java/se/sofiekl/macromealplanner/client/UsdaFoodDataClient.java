@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
-import se.sofiekl.macromealplanner.dto.foodSearchFlow.UsdaFoodDTO;
-import se.sofiekl.macromealplanner.dto.foodSearchFlow.UsdaSearchResponseDTO;
+import se.sofiekl.macromealplanner.dto.usda.UsdaFoodDTO;
+import se.sofiekl.macromealplanner.dto.usda.UsdaSearchResponseDTO;
 
 @Component
 public class UsdaFoodDataClient {

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users/{userId}/days")
+@RequestMapping("/api/weeks/{weekId}/days")
 public class DayController {
 
     private final DayService dayService;
@@ -27,9 +27,10 @@ public class DayController {
      */
     @PostMapping
     public ResponseEntity<DayResponseDTO> addOrGetDay(
-            @PathVariable Long userId,
-            @Valid @RequestBody DayRequestDTO request) {
-        DayResponseDTO response = dayService.createOrGetDay(request, userId);
+            @Valid @RequestBody DayRequestDTO request,
+            @PathVariable Long weekId
+    ) {
+        DayResponseDTO response = dayService.createOrGetDay(request, weekId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -37,58 +38,49 @@ public class DayController {
 
     /**
      * Get a specifc day from date
-     * @param userId The user to whom the dy belongs
      * @param date the date of the day
      * @return ResponseEntity<DayResponseDTO>
      */
     @GetMapping("/{date}")
     public ResponseEntity<DayResponseDTO> getDayByDate(
-            @PathVariable Long userId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
-        DayResponseDTO response = dayService.getDayByDate(userId, date);
+        DayResponseDTO response = dayService.getDayByDate(date);
         return ResponseEntity.ok(response);
     }
 
     /**
      * Get all days belonging to a User
-     * @param userId
-     * @return
+     * @return List of Day response data
      */
-    @GetMapping
-    public ResponseEntity<List<DayResponseDTO>> getAllDays(
-            @PathVariable Long userId
-    ) {
-        List<DayResponseDTO> days = dayService.getAllDaysForUser(userId);
+    @GetMapping("/all")
+    public ResponseEntity<List<DayResponseDTO>> getAllDays() {
+        List<DayResponseDTO> days = dayService.getAllDaysForUser();
         return ResponseEntity.ok(days);
     }
 
 
     /**
      * Get all days of a week
-     * @param userId the User who owns this week
-     * @param startDate the date on which the week starts
+     * @param weekId The ID of the Week
      * @return ResponseEntity containing the list of day-data for each day of the week
      */
-    @GetMapping("/week")
+    @GetMapping()
     public ResponseEntity<List<DayResponseDTO>> getDaysForWeek(
-            @PathVariable Long userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate
+            @PathVariable Long weekId
     ) {
-        List<DayResponseDTO> days = dayService.getDaysForWeek(userId, startDate);
+        List<DayResponseDTO> days = dayService.getDaysForWeek(weekId);
         return ResponseEntity.ok(days);
     }
 
 
     /**
      * Delete a day.
-     * @param userId The user who owns the day
      * @param dayId The id of the day
      * @return Empty response entity
      */
     @DeleteMapping("/{dayId}")
     public ResponseEntity<Void> deleteDay(
-            @PathVariable Long userId,
             @PathVariable Long dayId
     ) {
         dayService.deleteDay(dayId);

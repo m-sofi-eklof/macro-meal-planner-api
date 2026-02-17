@@ -7,5 +7,5 @@ package se.sofiekl.macromealplanner.model;
  */
 public enum FoodSource {
     MANUAL,
-    USDA_API
+    USDA
 }

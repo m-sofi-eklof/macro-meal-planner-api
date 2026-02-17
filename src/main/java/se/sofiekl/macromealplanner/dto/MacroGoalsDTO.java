@@ -1,4 +1,4 @@
-package se.sofiekl.macromealplanner.dto.dailySummaryFlow;
+package se.sofiekl.macromealplanner.dto;
 
 public record MacroGoalsDTO(
         Integer calories,

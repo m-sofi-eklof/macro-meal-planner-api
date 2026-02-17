@@ -2,6 +2,7 @@ package se.sofiekl.macromealplanner.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import se.sofiekl.macromealplanner.dto.WeekRequestDTO;
 import se.sofiekl.macromealplanner.dto.WeekResponseDTO;
@@ -33,15 +34,23 @@ public class WeekService {
 
     /**
      * Get a specific week by ID
-     * @param userId The user who owns the week
+     * The User is retrieved through Spring Security
      * @param weekId The id of the Week
      * @return WeekResponseDTO
      */
-    public WeekResponseDTO getWeekById(Long userId, Long weekId) {
+    public WeekResponseDTO getWeekById(Long weekId) {
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
+        //get week
         Week week = weekRepository.findById(weekId)
                 .orElseThrow(() -> new EntityNotFoundException("Week not found with id: " + weekId));
 
-        // Verifiera att week tillhör rätt user
+        // Check Week belongs to User
         if (!week.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("Week does not belong to user");
         }
@@ -52,28 +61,30 @@ public class WeekService {
 
     /**
      * Get or create the current week
-     * @param userId The user for whom to create the week / user who owns the week
-     * @return WeekResponseDTO for the current week and passed user
+     * @return WeekResponseDTO for the current week and logged-in user
      */
-    public WeekResponseDTO getOrCreateCurrentWeek(Long userId){
+    public WeekResponseDTO getOrCreateCurrentWeek(){
         LocalDate today = LocalDate.now();
-        return createOrGetWeek(new WeekRequestDTO(today),  userId);
+        return createOrGetWeek(new WeekRequestDTO(today));
     }
 
     /**
      * Create or get a week
+     * The user is retrieved through spring security
      * @param request A request DTO containing a date in the week
-     * @param userId The user the week belongs to
      * @return The week's response data
      */
     @Transactional
-    public WeekResponseDTO createOrGetWeek(WeekRequestDTO request, Long userId) {
+    public WeekResponseDTO createOrGetWeek(WeekRequestDTO request) {
 
-        //check user exists
-        User user = userRepository.findById(userId)
-                .orElseThrow(()->new EntityNotFoundException("User not found with id: " + userId));
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
 
-        //check week exists
+        Long userId = user.getId();
+
+        //check week exists for user
         Optional<Week> existingWeek = weekRepository.findByUserIdAndWeekNumberAndYear(
                 userId,
                 request.date().get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),
@@ -102,13 +113,17 @@ public class WeekService {
 
     /**
      * Get all weeks for a User
-     * @param userId The Id of the User
+     * The User is retrieved from Spring Security
      * @return List of all WeekResponseDTOs belonging the User
      */
-    public List<WeekResponseDTO> getAllWeeksForUser(Long userId) {
-        //check if user exists
-        userRepository.findById(userId)
-                .orElseThrow(()->new EntityNotFoundException("User not found with id: " + userId));
+    public List<WeekResponseDTO> getAllWeeksForUser() {
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         //find all weeks
         List<Week> weeks = weekRepository.findAllByUserId(userId);
         //return
@@ -118,12 +133,20 @@ public class WeekService {
     /**
      * Delete a Week
      * @param id The ID of the Week
-     * @param userId The ID of the User
+     * The User is retrieved through spring security
      */
-    public void deleteWeek(Long id, Long userId) {
+    public void deleteWeek(Long id) {
         //check if week exists
         Week week = weekRepository.findById(id)
                 .orElseThrow(()->new EntityNotFoundException("Week not found with id: " + id));
+
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         //confirm week belongs to user
         if(!week.getUser().getId().equals(userId)){
             throw new IllegalArgumentException("Week does not belong to this user");

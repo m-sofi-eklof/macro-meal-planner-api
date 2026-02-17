@@ -1,4 +1,4 @@
-package se.sofiekl.macromealplanner.dto.foodSearchFlow;
+package se.sofiekl.macromealplanner.dto.usda;
 
 import jakarta.validation.constraints.NotBlank;
 

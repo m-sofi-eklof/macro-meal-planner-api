@@ -1,4 +1,4 @@
-package se.sofiekl.macromealplanner.dto.dailySummaryFlow;
+package se.sofiekl.macromealplanner.dto;
 
 import se.sofiekl.macromealplanner.model.FoodSource;
 
@@ -9,5 +9,6 @@ public record FoodItemResponseDTO(
         int calories,
         Double protein,
         FoodSource source,
-        Long mealId
+        Long mealId,
+        Long userId
 ){}

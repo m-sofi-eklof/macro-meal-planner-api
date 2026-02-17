@@ -18,4 +18,6 @@ public interface MealRepository extends JpaRepository<Meal,Long> {
     );
 
     List<Meal> getMealById(Long id);
+
+    List<Meal> findAllByDayId(Long id);
 }

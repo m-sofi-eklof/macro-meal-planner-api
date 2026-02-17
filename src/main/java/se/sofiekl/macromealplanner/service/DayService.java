@@ -1,8 +1,8 @@
 package se.sofiekl.macromealplanner.service;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import se.sofiekl.macromealplanner.dto.DayRequestDTO;
 import se.sofiekl.macromealplanner.dto.DayResponseDTO;
@@ -13,6 +13,7 @@ import se.sofiekl.macromealplanner.model.User;
 import se.sofiekl.macromealplanner.model.Week;
 import se.sofiekl.macromealplanner.repository.DayRepository;
 import se.sofiekl.macromealplanner.repository.UserRepository;
+import se.sofiekl.macromealplanner.repository.WeekRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,12 +25,16 @@ public class DayService {
     private final UserRepository userRepository;
     private final DayMapper dayMapper;
     private final MealMapper mealMapper;
+    private final WeekRepository weekRepository;
+    private final WeekService weekService;
 
-    public DayService(DayRepository dayRepository, UserRepository userRepository, DayMapper dayMapper, MealMapper mealMapper) {
+    public DayService(DayRepository dayRepository, UserRepository userRepository, DayMapper dayMapper, MealMapper mealMapper, WeekRepository weekRepository, WeekService weekService) {
         this.dayRepository = dayRepository;
         this.userRepository = userRepository;
         this.mealMapper = mealMapper;
         this.dayMapper = dayMapper;
+        this.weekRepository = weekRepository;
+        this.weekService = weekService;
     }
 
     /**
@@ -37,10 +42,14 @@ public class DayService {
      * If day already exists, returns existing day
      */
     @Transactional
-    public DayResponseDTO createOrGetDay(DayRequestDTO request, Long userId) {
-        //Check user exists
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found with id: " + userId));
+    public DayResponseDTO createOrGetDay(DayRequestDTO request, Long weekId) {
+
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
 
         //Check day already exists
         Day existingDay = dayRepository.findByUserIdAndDate(userId, request.date())
@@ -49,10 +58,19 @@ public class DayService {
             return dayMapper.toDTO(existingDay);
         }
 
+        //get week
+        Week week = weekRepository.findById(weekId)
+                .orElseThrow(()-> new EntityNotFoundException("Week not found with weekId: " + weekId));
+
+        //check date is within week ange
+        if(request.date().isBefore(week.getStartDate()) || request.date().isAfter(week.getEndDate())) {
+            throw new IllegalArgumentException("This date is not within the date range of this week");
+        }
         //Create new day
         Day newDay = new Day();
         newDay.setDate(request.date());
         newDay.setUser(user);
+        newDay.setWeek(week);
 
         Day savedDay = dayRepository.save(newDay);
         return dayMapper.toDTO(savedDay);
@@ -61,7 +79,14 @@ public class DayService {
     /**
      * Get a specific day from a date
      */
-    public DayResponseDTO getDayByDate(Long userId, LocalDate date){
+    public DayResponseDTO getDayByDate(LocalDate date){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         Day day = dayRepository.findByUserIdAndDate(userId,date)
                 .orElseThrow(()-> new EntityNotFoundException("No day found for user " + userId + "on date: " + date));
         return dayMapper.toDTO(day);
@@ -70,7 +95,14 @@ public class DayService {
     /**
      * Get all days for a specific user
      */
-    public List<DayResponseDTO> getAllDaysForUser(Long userId){
+    public List<DayResponseDTO> getAllDaysForUser(){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         List<Day> allDays = dayRepository.findByUserId(userId);
         return allDays.stream()
                 .map(dayMapper::toDTO)
@@ -80,9 +112,21 @@ public class DayService {
     /**
      * Get days for a specific week
      */
-    public List<DayResponseDTO>getDaysForWeek(Long userId, LocalDate weekStart){
-        LocalDate weekEnd = weekStart.plusDays(7);
-        List<Day> allDays = dayRepository.findDayByUserIdAndDateBetween(userId, weekStart,weekEnd);
+    public List<DayResponseDTO>getDaysForWeek(Long weekId){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
+        //get week
+        Week week = weekRepository.findById(weekId)
+                .orElseThrow(()-> new EntityNotFoundException("Week not found with id: " + weekId));
+        LocalDate startOfWeek = week.getStartDate();
+        LocalDate endOfWeek = week.getEndDate();
+
+        List<Day> allDays = dayRepository.findDayByUserIdAndDateBetween(userId, startOfWeek, endOfWeek);
 
         return allDays.stream()
                 .map(dayMapper::toDTO)
@@ -94,8 +138,21 @@ public class DayService {
      */
     @Transactional
     public void deleteDay(Long dayId){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
         Day day = dayRepository.findById(dayId)
                 .orElseThrow(()-> new EntityNotFoundException("Day not found with id: " + dayId));
+
+        // Check day belongs to user
+        if(!day.getUser().getId().equals(userId)){
+            throw new IllegalArgumentException("This day does not belong to this User");
+        }
+
         dayRepository.delete(day);
     }
 }

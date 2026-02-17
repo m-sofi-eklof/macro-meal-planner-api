@@ -62,7 +62,8 @@ public class Week {
     /**
      * The Days in the Week
      */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "week",  cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "week",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Day> days = new ArrayList<>();
+
 }
 

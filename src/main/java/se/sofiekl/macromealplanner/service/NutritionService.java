@@ -2,9 +2,8 @@ package se.sofiekl.macromealplanner.service;
 
 import org.springframework.stereotype.Service;
 import se.sofiekl.macromealplanner.client.UsdaFoodDataClient;
-import se.sofiekl.macromealplanner.dto.foodSearchFlow.NutritionSearchResponseDTO;
-import se.sofiekl.macromealplanner.dto.foodSearchFlow.UsdaFoodItemDTO;
-import se.sofiekl.macromealplanner.dto.foodSearchFlow.UsdaFoodNutrientDTO;
+import se.sofiekl.macromealplanner.dto.usda.*;
+import se.sofiekl.macromealplanner.model.FoodItem;
 
 import java.util.List;
 
@@ -34,18 +33,32 @@ public class NutritionService{
     }
 
     public List<NutritionSearchResponseDTO> search(String query){
-        var searchResponse = usdaClient.searchFoods(query);
+        UsdaSearchResponseDTO searchResponse = usdaClient.searchFoods(query);
         if(searchResponse==null || searchResponse.foods()==null){
             return List.of();
         }
 
         return searchResponse.foods()
                 .stream()
-                .map(this::mapToNutritionResponse)
+                .map(this::mapToNutritionResponseFromFoodItemDTO)
                 .toList();
     }
 
-    private NutritionSearchResponseDTO mapToNutritionResponse(UsdaFoodItemDTO food){
+    public NutritionSearchResponseDTO getByFdcId(Long fdcId){
+         return mapToNutritionResponseFromFoodDTO(usdaClient.getFoodById(fdcId));
+    }
+
+    private NutritionSearchResponseDTO mapToNutritionResponseFromFoodItemDTO(UsdaFoodItemDTO food){
+        Integer calories = extractNutrientValue(food.foodNutrients(), ENERGY_KCAL_ID);
+        Double protein = extractNutrientValueDouble(food.foodNutrients(), PROTEIN_ID);
+
+        return new NutritionSearchResponseDTO(food.description(), calories,protein);
+    }
+
+    private NutritionSearchResponseDTO mapToNutritionResponseFromFoodDTO(UsdaFoodDTO food){
+        if (food.foodNutrients()==null || food.foodNutrients().isEmpty()){
+            return null;
+        }
         Integer calories = extractNutrientValue(food.foodNutrients(), ENERGY_KCAL_ID);
         Double protein = extractNutrientValueDouble(food.foodNutrients(), PROTEIN_ID);
 

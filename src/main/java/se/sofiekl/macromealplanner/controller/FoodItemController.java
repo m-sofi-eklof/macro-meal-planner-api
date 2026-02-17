@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.sofiekl.macromealplanner.dto.FoodItemRequestDTO;
-import se.sofiekl.macromealplanner.dto.dailySummaryFlow.FoodItemResponseDTO;
+import se.sofiekl.macromealplanner.dto.FoodItemResponseDTO;
 import se.sofiekl.macromealplanner.service.FoodItemService;
 
 import java.util.List;
