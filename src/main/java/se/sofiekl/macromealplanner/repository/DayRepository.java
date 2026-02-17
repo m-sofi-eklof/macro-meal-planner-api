@@ -37,4 +37,12 @@ public interface DayRepository extends JpaRepository<Day,Long> {
      */
     List<Day> findAllByWeekId(Long weekId);
 
+    /**
+     * Find a specific day for a specific user
+     * @param dayId The ID of the day
+     * @param userId The ID of the user
+     * @return The day or null
+     */
+    Optional<Day> findByIdAndUserId(Long dayId, Long userId);
+
 }

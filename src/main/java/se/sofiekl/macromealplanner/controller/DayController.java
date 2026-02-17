@@ -24,6 +24,7 @@ public class DayController {
 
     /**
      * Create or get a day
+     * @see DayRequestDTO
      */
     @PostMapping
     public ResponseEntity<DayResponseDTO> addOrGetDay(
@@ -35,18 +36,13 @@ public class DayController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
-    /**
-     * Get a specifc day from date
-     * @param date the date of the day
-     * @return ResponseEntity<DayResponseDTO>
-     */
-    @GetMapping("/{date}")
-    public ResponseEntity<DayResponseDTO> getDayByDate(
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
-    ) {
-        DayResponseDTO response = dayService.getDayByDate(date);
-        return ResponseEntity.ok(response);
+    @GetMapping("/{dayId}")
+    public ResponseEntity<DayResponseDTO> getDay(
+            @PathVariable Long dayId,
+            @PathVariable Long weekId
+    ){
+        DayResponseDTO response = dayService.getDayById(dayId, weekId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**

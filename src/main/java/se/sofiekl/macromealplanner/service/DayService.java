@@ -59,8 +59,8 @@ public class DayService {
         }
 
         //get week
-        Week week = weekRepository.findById(weekId)
-                .orElseThrow(()-> new EntityNotFoundException("Week not found with weekId: " + weekId));
+        Week week = weekRepository.findByIdAndUserId(weekId, userId)
+                .orElseThrow(()-> new EntityNotFoundException("Week not found with weekId: " + weekId + " and userId: " + userId));
 
         //check date is within week ange
         if(request.date().isBefore(week.getStartDate()) || request.date().isAfter(week.getEndDate())) {
@@ -76,10 +76,7 @@ public class DayService {
         return dayMapper.toDTO(savedDay);
     }
 
-    /**
-     * Get a specific day from a date
-     */
-    public DayResponseDTO getDayByDate(LocalDate date){
+    public DayResponseDTO getDayById(Long id, Long weekId) {
         //get logged-in user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsernameIgnoreCase(username)
@@ -87,8 +84,10 @@ public class DayService {
 
         Long userId = user.getId();
 
-        Day day = dayRepository.findByUserIdAndDate(userId,date)
-                .orElseThrow(()-> new EntityNotFoundException("No day found for user " + userId + "on date: " + date));
+        //get day
+        Day day = dayRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(()-> new EntityNotFoundException("Day not found with dayId: " + id + " and userId: " + userId));
+        //return
         return dayMapper.toDTO(day);
     }
 

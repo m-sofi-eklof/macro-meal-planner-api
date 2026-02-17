@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface WeekRepository extends JpaRepository<Week,Long> {
     Optional<Week> findByUserIdAndWeekNumberAndYear(Long userId, Integer weekNumber, Integer year);
     List<Week> findAllByUserId(Long userId);
+    Optional<Week> findByIdAndUserId(Long id, Long userId);
 }
