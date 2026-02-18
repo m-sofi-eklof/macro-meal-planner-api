@@ -80,7 +80,7 @@ public class FoodItemController {
             @PathVariable Long foodItemId,
             @Valid @RequestBody FoodItemRequestDTO dto
     ) {
-        FoodItemResponseDTO updated = foodItemService.updateFoodItem(foodItemId, dto);
+        FoodItemResponseDTO updated = foodItemService.updateFoodItem(foodItemId, mealId, dto);
         return ResponseEntity.ok(updated);
     }
 

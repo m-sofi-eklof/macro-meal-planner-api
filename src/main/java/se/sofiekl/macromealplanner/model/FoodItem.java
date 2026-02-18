@@ -36,10 +36,10 @@ public class FoodItem {
     private String name;
 
     /**
-     * Quantity in grams
+     * Quantity in number of servings as a decimal value
      */
-    @Column(name="quantity_grams", nullable = false)
-    private Integer quantityGrams;
+    @Column( nullable = false)
+    private Double servings;
 
     /**
      * The total calories in kcal

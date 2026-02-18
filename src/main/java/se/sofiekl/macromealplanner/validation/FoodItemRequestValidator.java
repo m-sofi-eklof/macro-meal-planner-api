@@ -29,14 +29,6 @@ public class FoodItemRequestValidator implements ConstraintValidator<FoodItemReq
                 valid=false;
             }
 
-            //require quantityGrams
-            if(value.quantityGrams()==null || value.quantityGrams()<=0){
-                context.buildConstraintViolationWithTemplate("Quantity grams can not be empty or have negative value")
-                        .addPropertyNode("quantityGrams")
-                        .addConstraintViolation();
-                valid=false;
-            }
-
             //require calorie field
             if(value.calories()==null || value.calories()<=0){
                 context.buildConstraintViolationWithTemplate("Calories can not be empty or have negative value")

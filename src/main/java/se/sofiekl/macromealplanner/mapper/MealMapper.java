@@ -74,7 +74,7 @@ public class MealMapper {
                 item.getName(),
                 item.getCalories(),
                 item.getProtein(),
-                item.getQuantityGrams()
+                item.getServings()
         );
     }
 }
