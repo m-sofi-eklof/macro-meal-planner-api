@@ -88,8 +88,19 @@ public class FoodItemService {
      * @return
      */
     public List<FoodItemResponseDTO> getAllFoodItemsForMeal(Long mealId) {
+        //get user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        //get meal
         Meal meal = mealRepository.findById(mealId)
-                .orElseThrow(() -> new EntityNotFoundException("Meal not found with id: " + mealId));
+                .orElseThrow(()-> new EntityNotFoundException("Meal not found with id: " + mealId));
+
+        //check meal belongs to user
+        if(!meal.getUser().getId().equals(user.getId())){
+            throw new AccessDeniedException("You lack permission to add food to this meal");
+        }
 
         List<FoodItem> foodItems = foodItemRepository.findAllByMeal(meal);
 
@@ -104,8 +115,20 @@ public class FoodItemService {
      * @return The response data for the FoodItem
      */
     public FoodItemResponseDTO getFoodItemById(Long foodItemId) {
+        //get user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        //get foodItem
         FoodItem foodItem = foodItemRepository.findById(foodItemId)
                 .orElseThrow(() -> new EntityNotFoundException("FoodItem not found with id: " + foodItemId));
+
+
+        //check foodItem belongs to user
+        if(!foodItem.getUser().getId().equals(user.getId())){
+            throw new AccessDeniedException("You lack permission to access this food item");
+        }
 
         return mapper.toFoodItemResponseDTO(foodItem);
     }
@@ -118,15 +141,38 @@ public class FoodItemService {
      */
     @Transactional
     public FoodItemResponseDTO updateFoodItem(Long foodItemId, FoodItemRequestDTO dto) {
+        //get user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        //get food item
         FoodItem foodItem = foodItemRepository.findById(foodItemId)
                 .orElseThrow(() -> new EntityNotFoundException("FoodItem not found with id: " + foodItemId));
 
+
+        //check food item belongs to user
+        if(!foodItem.getUser().getId().equals(user.getId())){
+            throw new AccessDeniedException("You lack permission to update this food item");
+        }
+
+
         // Uppdate fields
-        foodItem.setName(dto.name());
-        foodItem.setCalories(dto.calories());
-        foodItem.setProtein(dto.protein());
-        foodItem.setQuantityGrams(dto.quantityGrams());
-        foodItem.setSource(foodItem.getSource());
+
+        //for USDA
+        if(foodItem.getSource() == FoodSource.USDA){
+            foodItem.setQuantityGrams(dto.quantityGrams());
+
+        //for MANUAL
+        }else if(foodItem.getSource() == FoodSource.MANUAL){
+            foodItem.setName(dto.name());
+            foodItem.setCalories(dto.calories());
+            foodItem.setProtein(dto.protein());
+            foodItem.setQuantityGrams(dto.quantityGrams());
+            foodItem.setSource(foodItem.getSource());
+        }else{
+            throw new IllegalArgumentException("Food source  is null or not supported");
+        }
 
         FoodItem updated = foodItemRepository.save(foodItem);
 
@@ -139,8 +185,20 @@ public class FoodItemService {
      */
     @Transactional
     public void deleteFoodItem(Long foodItemId) {
+        //get user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        //get food item
         FoodItem foodItem = foodItemRepository.findById(foodItemId)
                 .orElseThrow(() -> new EntityNotFoundException("FoodItem not found with id: " + foodItemId));
+
+
+        //check food item belongs to user
+        if(!foodItem.getUser().getId().equals(user.getId())){
+            throw new AccessDeniedException("You lack permission to delete this food item");
+        }
 
         foodItemRepository.delete(foodItem);
     }

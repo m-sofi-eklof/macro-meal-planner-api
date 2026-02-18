@@ -25,6 +25,11 @@ public class FoodItem {
     private Long id;
 
     /**
+     * fdcId for USDA sourced food items
+     */
+    Long fdcId;
+
+    /**
      * Name of the food item
      */
     @Column(nullable = false)

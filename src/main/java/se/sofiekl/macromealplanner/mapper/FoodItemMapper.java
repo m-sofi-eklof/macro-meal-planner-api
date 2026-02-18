@@ -29,7 +29,8 @@ public class FoodItemMapper {
                 foodItem.getProtein(),
                 foodItem.getSource(),
                 foodItem.getMeal().getId(),
-                foodItem.getUser().getId()
+                foodItem.getUser().getId(),
+                foodItem.getFdcId()
         );
     }
 
@@ -54,6 +55,7 @@ public class FoodItemMapper {
         foodItem.setCalories(dto.calories());
         foodItem.setName(dto.name());
         foodItem.setQuantityGrams(quantityGrams);
+        foodItem.setFdcId(dto.fdcId());
         return foodItem;
     }
 }

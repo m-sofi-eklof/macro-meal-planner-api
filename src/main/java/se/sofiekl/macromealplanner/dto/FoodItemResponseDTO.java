@@ -10,5 +10,6 @@ public record FoodItemResponseDTO(
         Double protein,
         FoodSource source,
         Long mealId,
-        Long userId
+        Long userId,
+        Long fdcId
 ){}
