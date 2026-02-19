@@ -20,20 +20,22 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
       - name: Build Spring Boot app
         run: ./mvnw package -DskipTests
 
       - name: Start Spring Boot app
         run: |
           java -jar target/*.jar &
-          sleep 30  # Wait for app to start
+          sleep 30 # Wait for app to start
         env:
           SPRING_DATASOURCE_URL: ${{ secrets.DB_URL }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           USDA_API_KEY: ${{secrets.USDA_API_KEY}}
-
 
       - name: Install Newman
         run: npm install -g newman
@@ -42,6 +44,7 @@ jobs:
         run: |
           newman run src/test/postman/postmanCollection.json \
             -e src/test/postman/postmanEnv.json \
+            --env-var base_url=http://localhost:8080 \
             --reporters cli,json \
             --reporter-json-export results.json
 
