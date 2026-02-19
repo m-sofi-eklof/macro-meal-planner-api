@@ -1,5 +1,6 @@
 package se.sofiekl.macromealplanner.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,20 +20,18 @@ public class DailySummaryController {
     }
 
     /**
-     * Gets daily summary for specific date nd user.
-     * @param userId The user
+     * Gets daily summary for specific date and user.
      * @param date The date
-     * @return a DailySummareDTO containing date, macrototals, macrogoals and progress.
+     * @return a DailySummaryDTO containing date, macrototals, macrogoals and progress.
      */
-    @GetMapping("/{userId}/{date}")
-    public DailySummaryDTO getDailySummary(
-            @PathVariable("userId") Long userId,
+    @GetMapping("/{date}")
+    public ResponseEntity<DailySummaryDTO> getDailySummary(
             @PathVariable("date") LocalDate date){
-        return dailySummaryService.getDailySummary(userId,date);
+        return ResponseEntity.ok(dailySummaryService.getDailySummary(date));
     }
 
-    @GetMapping("/{userId}/today")
-    public DailySummaryDTO getTodaySummary(@PathVariable Long userId){
-        return dailySummaryService.getDailySummary(userId,LocalDate.now());
+    @GetMapping("/today")
+    public ResponseEntity<DailySummaryDTO> getTodaySummary(){
+        return ResponseEntity.ok(dailySummaryService.getDailySummary(LocalDate.now()));
     }
 }
