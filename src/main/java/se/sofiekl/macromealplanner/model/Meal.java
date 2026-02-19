@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents a meal in the macro meal planner.
  */
@@ -50,5 +53,11 @@ public class Meal {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    /**
+     * The Food Items in the Meal
+     */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "meal",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodItem> foodItems = new ArrayList<>();
 
 }

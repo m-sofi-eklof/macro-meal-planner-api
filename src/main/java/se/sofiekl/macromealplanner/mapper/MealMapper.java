@@ -48,18 +48,13 @@ public class MealMapper {
      * @return
      */
     public MealResponseDTO toMealResponseDTO(Meal meal) {
-        List<FoodItem> foodItems = foodItemRepository.findAllByMeal(meal);
-
-        List<FoodItemSummaryDTO> foodItemDTOs = foodItems.stream()
-                .map(this::toFoodItemSummaryDTO)
-                .collect(Collectors.toList());
 
         return new MealResponseDTO(
                 meal.getId(),
                 meal.getType().toString(),
                 meal.getOrderIndex(),
                 meal.getDay().getDate(),
-                foodItemDTOs
+                meal.getFoodItems().stream().map(this::toFoodItemSummaryDTO).collect(Collectors.toList())
         );
     }
 
