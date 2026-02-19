@@ -29,13 +29,18 @@ jobs:
       - name: Start Spring Boot app
         run: |
           java -jar target/*.jar &
-          sleep 30 # Wait for app to start
+          echo "Waiting for app to start..." 
+          for i in {1..60}; do
+            if curl -s http://localhost:8080/api/auth/login > /dev/null 2>&1; then
+              echo "App is up!"
+              break
+            fi
+            echo "Attempt $i - not ready yet..."
+            sleep 3
+          done
         env:
-          SPRING_DATASOURCE_URL: ${{ secrets.DB_URL }}
-          SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
-          SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          USDA_API_KEY: ${{secrets.USDA_API_KEY}}
+          USDA_API_KEY: ${{ secrets.USDA_API_KEY }}
 
       - name: Install Newman
         run: npm install -g newman
