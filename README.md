@@ -51,7 +51,7 @@ This project is under active development.
 - PUT /api/meals/{mealId}/food-items/{foodItemId} (Update a food item)
 - DELETE /api/meals/{mealId}/food-items/{foodItemId} (Delete a food item)
 ## Users
-- PUT /api/users (Update username and or password for logged in user)
+- PATCH /api/users (Update username and or password for logged in user)
 - PUT /api/users/goals (Update protein and calorie goals for logged in user)
 - DELETE /api/users (Delete logged-in user)
 
