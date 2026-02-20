@@ -2,6 +2,7 @@ package se.sofiekl.macromealplanner.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.sofiekl.macromealplanner.dto.userAndLogin.AuthResponseDTO;
@@ -12,40 +13,24 @@ import se.sofiekl.macromealplanner.repository.UserRepository;
 
 @Service
 public class AuthService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthService(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager,
-            JwtService jwtService
-    ) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthService(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService) {
+        this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
+
 
     /**
      * Register a new User
      * @param request The request data for the User
      * @return The token wrapped in a DTO
      */
-    public AuthResponseDTO register(RegisterRequestDTO request){
-        // Check if username exists
-        if (userRepository.existsByUsernameIgnoreCase(request.username())) {
-            throw new IllegalArgumentException("Username already exists");
-        }
-
-        User user = new User();
-        user.setUsername(request.username());
-        user.setPassword(passwordEncoder.encode(request.password()));
-
-        userRepository.save(user);
-
+    public AuthResponseDTO register(RegisterRequestDTO request) {
+        User user = userService.createUser(request.username(), request.password());
         String token = jwtService.generateToken(user.getUsername());
         return new AuthResponseDTO(token);
     }
@@ -65,4 +50,10 @@ public class AuthService {
         String token = jwtService.generateToken(request.username());
         return new AuthResponseDTO(token);
     }
+
+    public AuthResponseDTO generateTokens(UserDetails userDetails) {
+        String accessToken = jwtService.generateToken(userDetails.getUsername());
+        return new AuthResponseDTO(accessToken);
+    }
+
 }
