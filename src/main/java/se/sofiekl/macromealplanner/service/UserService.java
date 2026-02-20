@@ -1,8 +1,12 @@
 package se.sofiekl.macromealplanner.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import se.sofiekl.macromealplanner.dto.MacroGoalsDTO;
+import se.sofiekl.macromealplanner.dto.userAndLogin.AuthResponseDTO;
 import se.sofiekl.macromealplanner.dto.userAndLogin.UserRequestDTO;
 import se.sofiekl.macromealplanner.dto.userAndLogin.UserResponseDTO;
 import se.sofiekl.macromealplanner.mapper.UserMapper;
@@ -16,70 +20,85 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,  JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+    }
+
+    /**
+     * Create a new User
+     * @param username
+     * @param rawPassword
+     * @return
+     */
+    public User createUser(String username, String rawPassword) {
+        if (userRepository.existsByUsernameIgnoreCase(username)) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        return userRepository.save(user);
     }
 
     /**
      * Update a User (password and username only)
-     * @param userId The ID of the User
      * @param request The requestData of the user
      * @return
      */
-    public UserResponseDTO updateUser(Long userId, UserRequestDTO request){
-        //Find user
-        User foundUser = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found with id: "+userId));
+    @Transactional
+    public AuthResponseDTO updateUser(UserRequestDTO request){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
         //Check username availability (amongst other users, not self)
-        if(userRepository.existsByUsernameIgnoreCaseAndIdNot(request.username(), foundUser.getId())){
+        if(userRepository.existsByUsernameIgnoreCaseAndIdNot(request.username(), user.getId())){
             throw new IllegalArgumentException("Username is already in use");
         }
         //uppdate user
-        foundUser.setUsername(request.username());
+        user.setUsername(request.username());
         String rawPassword = request.password();
-        foundUser.setPassword(passwordEncoder.encode(rawPassword));
+        user.setPassword(passwordEncoder.encode(rawPassword));
 
-        User updatedUser = userRepository.save(foundUser);
-        //return
-        return UserMapper.toDTO(updatedUser);
+        User updatedUser = userRepository.save(user);
 
+        //generate token
+        String newToken = jwtService.generateToken(request.username());
+
+        return new AuthResponseDTO(newToken);
     }
 
     /**
-     * Update protein goals for a user
-     * @param userId The user ID
-     * @param proteinGoal The new protein goal
+     * Update calorie and protein goals for a user
+     * @param goals The updated goals
      */
-    public void updateUserProteinGoal(Long userId, Double proteinGoal) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found with id: "+userId));
+    public MacroGoalsDTO updateUserMacroGoals(MacroGoalsDTO goals) {
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
 
-        user.setProteinGoal(proteinGoal);
+        user.setCalorieGoal(goals.calories());
+        user.setProteinGoal(goals.protein());
+        User savedUser = userRepository.save(user);
 
-        userRepository.save(user);
+        return new MacroGoalsDTO(savedUser.getCalorieGoal(),  savedUser.getProteinGoal());
     }
 
     /**
-     * Update calorie goals for a user
-     * @param userId The ID of the User
-     * @param caloriesGoal The updated calorie goal
+     * Delete account for logged in user
      */
-    public void updateUserCaloriesGoal(Long userId, Integer caloriesGoal) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found with id: "+userId));
-        user.setCalorieGoal(caloriesGoal);
-        userRepository.save(user);
-    }
+    public void deleteUser() {
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
 
-    public void deleteUser(Long userId) {
-        Optional<User> optionalUserser = userRepository.findById(userId);
-        if(optionalUserser.isEmpty()){
-            throw new IllegalArgumentException("User not found with id: "+userId);
-        }
-
-        User user = optionalUserser.get();
         userRepository.delete(user);
     }
 }

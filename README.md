@@ -50,10 +50,9 @@ This project is under active development.
 - GET /api/meals/{mealId}/food-items/{foodItemId} (Get a specific food item)
 - PUT /api/meals/{mealId}/food-items/{foodItemId} (Update a food item)
 - DELETE /api/meals/{mealId}/food-items/{foodItemId} (Delete a food item)
-## User (planned)
+## Users
 - PUT /api/users (Update username and or password for logged in user)
-- PUT /api/users/goals/protein (Update protein goals for logged in user)
-- PUT /api/users/goals/calories (Update calorie goal for logged-in user)
+- PUT /api/users/goals (Update protein and calorie goals for logged in user)
 - DELETE /api/users (Delete logged-in user)
 
 ## Quick start (local)

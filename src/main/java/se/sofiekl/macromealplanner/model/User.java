@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents a user in the mel planner application
  * <p>
@@ -48,6 +51,12 @@ public class User {
      */
     @Column(name= "calorie_goal")
     private Integer calorieGoal;
+
+    /**
+     * The User's Weeks
+     */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Week> weeks = new ArrayList<>();
 
     /**
      * Constructor
