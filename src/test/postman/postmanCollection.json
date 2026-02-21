@@ -1200,74 +1200,12 @@
       },
       "response": []
     },
-    {
-      "name": "update meal",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Status code is 200\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{token}}",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "PUT",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Accept",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"my favorite meal\",\n  \"type\": \"breakfast\",\n  \"orderIndex\": 0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{base_url}}/api/days/{{dayId}}/meals/{{mealId}}",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "days",
-            "{{dayId}}",
-            "meals",
-            "{{mealId}}"
-          ]
-        }
-      },
-      "response": []
-    },
+
+
+
+
+
+
     {
       "name": "Update a User",
       "event": [
