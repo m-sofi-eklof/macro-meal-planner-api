@@ -51,6 +51,7 @@ public class MealMapper {
 
         return new MealResponseDTO(
                 meal.getId(),
+                meal.getName(),
                 meal.getType().toString(),
                 meal.getOrderIndex(),
                 meal.getDay().getDate(),

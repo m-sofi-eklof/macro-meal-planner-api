@@ -57,6 +57,26 @@ public class WeekController {
         return ResponseEntity.ok(weekService.getOrCreateCurrentWeek());
     }
 
+    /**
+     * Get the following week from week ID
+     * @param weekId The id of a week
+     * @return 200ok + weekresponsedto for the next week
+     */
+    @GetMapping("/{weekId}/next")
+    public ResponseEntity<WeekResponseDTO> getNextWeek(@PathVariable Long weekId){
+        return ResponseEntity.ok(weekService.getNext(weekId));
+    }
+
+    /**
+     * Get the previous week
+     * @param weekId The id of a week
+     * @return 200OK + the response dto for the previous week
+     */
+    @GetMapping("/{weekId}/prev")
+    public ResponseEntity<WeekResponseDTO> getPreviousWeek(@PathVariable Long weekId){
+        return ResponseEntity.ok(weekService.getPrev(weekId));
+    }
+
     @DeleteMapping("/{weekId}")
     public ResponseEntity<Void> deleteWeekById(
             @PathVariable Long weekId

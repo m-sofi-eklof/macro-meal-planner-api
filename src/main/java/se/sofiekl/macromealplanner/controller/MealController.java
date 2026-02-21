@@ -60,6 +60,19 @@ public class MealController {
     }
 
     /**
+     * Update/edit a meal
+     * @param mealId the Id of the meal
+     * @param mealRequestDTO the updated values
+     * @return dataobject for updated meal + 200ok
+     */
+    @PutMapping("/{mealId}")
+    public ResponseEntity<MealResponseDTO> updateMeal(
+            @PathVariable Long mealId,
+            @RequestBody MealRequestDTO mealRequestDTO
+    ){
+        return ResponseEntity.ok(mealService.updateMeal(mealId, mealRequestDTO));
+    }
+    /**
      * Remove a meal
      * @param mealId The ID of the meal
      * @return ResponseEntity NOCONTENT

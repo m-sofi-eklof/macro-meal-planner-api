@@ -25,6 +25,11 @@ public class Meal {
     private Long id;
 
     /**
+     * A name for the meal
+     */
+    String name;
+
+    /**
      * The type of meal, "Breakfast", "Lunch", "Dinner" or "Snack"
      * @see MealType
      */

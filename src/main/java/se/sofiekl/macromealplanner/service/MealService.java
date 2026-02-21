@@ -122,6 +122,30 @@ public class MealService {
 
     }
 
+    public MealResponseDTO updateMeal(Long mealId, MealRequestDTO request){
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
+        //get meal
+        Meal meal = mealRepository.findById(mealId)
+                .orElseThrow(()->new EntityNotFoundException("Meal not found with id:" + mealId));
+
+        //verify meal belongs to user
+        if (!meal.getUser().getId().equals(userId)){
+            throw new IllegalArgumentException("Meal does not belong to user");
+        }
+
+        meal.setType(MealType.valueOf(request.type().toUpperCase()));
+        meal.setName(request.name());
+
+        Meal updated = mealRepository.save(meal);
+        return mealMapper.toMealResponseDTO(updated);
+    }
+
     @Transactional
     public void deleteMeal(Long mealId){
         //get logged-in user

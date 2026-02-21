@@ -112,6 +112,54 @@ public class WeekService {
     }
 
     /**
+     * Get next week from week id
+     * @param weekId the id of the first week
+     * @return the response dto for the next week
+     */
+    @Transactional
+    public WeekResponseDTO getNext(Long weekId) {
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
+        //get week
+        Week week = weekRepository.findById(weekId).orElseThrow(()-> new EntityNotFoundException("Week not found with id: " + weekId));
+
+        //create or get next week
+        LocalDate nextWeekStartDate = week.getEndDate().plusDays(1);
+
+        return createOrGetWeek(new WeekRequestDTO(nextWeekStartDate)); //user ownership checked in next method
+
+    }
+
+    /**
+     * Get previous week from week id
+     * @param weekId The id of the first week
+     * @return The response dto for the previous week
+     */
+    @Transactional
+    public WeekResponseDTO getPrev(Long weekId) {
+        //get logged-in user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
+
+        Long userId = user.getId();
+
+        //get week
+        Week week = weekRepository.findById(weekId).orElseThrow(()-> new EntityNotFoundException("Week not found with id: " + weekId));
+
+        //create or get previous week
+        LocalDate prevWeekEndDate = week.getStartDate().minusDays(1);
+
+        return createOrGetWeek(new WeekRequestDTO(prevWeekEndDate));//user ownership checked in next method
+
+    }
+
+    /**
      * Get all weeks for a User
      * The User is retrieved from Spring Security
      * @return List of all WeekResponseDTOs belonging the User
