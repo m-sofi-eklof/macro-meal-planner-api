@@ -69,8 +69,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173"//,
-                //todo add deployed frontend link
+                "http://localhost:5173",
+                "https://macro-meal-planner-app.netlify.app"
         ));
         configuration.setAllowedMethods(List.of(
                 "GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"

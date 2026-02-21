@@ -49,7 +49,7 @@ jobs:
         run: |
           newman run src/test/postman/postmanCollection.json \
             -e src/test/postman/postmanEnv.json \
-            --env-var base_url=http://localhost:8080 \
+            --env-var "base_url=https://colourful-muire-sofi-eklof-219f4217.koyeb.app" \
             --reporters cli,json \
             --reporter-json-export results.json
 

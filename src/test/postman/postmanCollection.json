@@ -26,6 +26,17 @@
             "packages": {},
             "requests": {}
           }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
         }
       ],
       "request": {
@@ -198,7 +209,15 @@
             "exec": [
               "pm.test(\"Status code is 201\", function () {\r",
               "    pm.response.to.have.status(201);\r",
-              "});"
+              "});\r",
+              "\r",
+              "var jsonData = pm.response.json();\r",
+              "pm.environment.set(\"weekId\", jsonData.id);\r",
+              "\r",
+              "\r",
+              " \r",
+              "\r",
+              ""
             ],
             "type": "text/javascript",
             "packages": {},
@@ -294,7 +313,11 @@
             "exec": [
               "pm.test(\"Status code is 200\", function () {\r",
               "    pm.response.to.have.status(201);\r",
-              "});"
+              "});\r",
+              "\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.environment.set(\"dayId\", jsonData.id);\r",
+              ""
             ],
             "type": "text/javascript",
             "packages": {},
@@ -317,7 +340,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"date\" : \"2026-02-14\",\r\n    \"weekId\" : 1\r\n}",
+          "raw": "{\r\n    \"date\" : \"2026-02-14\",\r\n    \"weekId\" : {{weekId}}\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -325,14 +348,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/weeks/1/days",
+          "raw": "{{base_url}}/api/weeks/{{weekId}}/days",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "weeks",
-            "1",
+            "{{weekId}}",
             "days"
           ]
         }
@@ -348,7 +371,11 @@
             "exec": [
               "pm.test(\"Status code is 201\", function () {\r",
               "    pm.response.to.have.status(201);\r",
-              "});"
+              "});\r",
+              "\r",
+              "const item = pm.response.json();\r",
+              "pm.environment.set(\"mealId\", item.id);\r",
+              ""
             ],
             "type": "text/javascript",
             "packages": {},
@@ -371,7 +398,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"dayId\" : 1,\r\n    \"type\" : \"breakfast\",\r\n    \"orderIndex\" : 0\r\n\r\n}",
+          "raw": "{\r\n    \"dayId\" : {{dayId}},\r\n    \"type\" : \"breakfast\",\r\n    \"orderIndex\" : 0\r\n\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -379,14 +406,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/days/1/meals",
+          "raw": "{{base_url}}/api/days/{{dayId}}/meals",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "days",
-            "1",
+            "{{dayId}}",
             "meals"
           ]
         }
@@ -470,7 +497,12 @@
             "exec": [
               "pm.test(\"Status code is 201\", function () {\r",
               "    pm.response.to.have.status(201);\r",
-              "});"
+              "});\r",
+              "\r",
+              "\r",
+              "const item = pm.response.json();\r",
+              "pm.environment.set(\"foodItemId\", item.id);\r",
+              ""
             ],
             "type": "text/javascript",
             "packages": {},
@@ -493,7 +525,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"mealId\" : 1,\r\n    \"source\": \"USDA\",\r\n    \"fdcId\" : {{fdcId}},\r\n    \"servings\" : 1.0\r\n}",
+          "raw": "{\r\n    \"mealId\" : {{mealId}},\r\n    \"source\": \"USDA\",\r\n    \"fdcId\" : {{fdcId}},\r\n    \"servings\" : 1.0\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -501,14 +533,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/meals/1/food-items",
+          "raw": "{{base_url}}/api/meals/{{mealId}}/food-items",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "meals",
-            "1",
+            "{{mealId}}",
             "food-items"
           ]
         }
@@ -524,7 +556,11 @@
             "exec": [
               "pm.test(\"Status code is 201\", function () {\r",
               "    pm.response.to.have.status(201);\r",
-              "});"
+              "});\r",
+              "\r",
+              "const item = pm.response.json();\r",
+              "\r",
+              "pm.environment.set(\"foodItemIdManual\", item.id);"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -547,7 +583,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"mealId\": 1,\r\n    \"source\":\"MANUAL\",\r\n    \"name\":\"toast\",\r\n    \"calories\": 70,\r\n    \"protein\" : 0.5,\r\n    \"servings\" : 1.0\r\n}",
+          "raw": "{\r\n    \"mealId\": {{mealId}},\r\n    \"source\":\"MANUAL\",\r\n    \"name\":\"toast\",\r\n    \"calories\": 70,\r\n    \"protein\" : 0.5,\r\n    \"servings\" : 1.0\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -555,14 +591,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/meals/1/food-items",
+          "raw": "{{base_url}}/api/meals/{{mealId}}/food-items",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "meals",
-            "1",
+            "{{mealId}}",
             "food-items"
           ]
         }
@@ -617,7 +653,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"mealId\":1,\r\n    \"foodItemId\" : 1\r\n}",
+          "raw": "{\r\n    \"mealId\": {{mealId}},\r\n    \"foodItemId\" : {{foodItemId}}\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -625,16 +661,16 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/meals/1/food-items/1",
+          "raw": "{{base_url}}/api/meals/{{mealId}}/food-items/{{foodItemId}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "meals",
-            "1",
+            "{{mealId}}",
             "food-items",
-            "1"
+            "{{foodItemId}}"
           ]
         }
       },
@@ -675,7 +711,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"mealId\":1\r\n}",
+          "raw": "{\r\n    \"mealId\":{{mealId}}\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -683,14 +719,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/meals/1/food-items",
+          "raw": "{{base_url}}/api/meals/{{mealId}}/food-items",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "meals",
-            "1",
+            "{{mealId}}",
             "food-items"
           ]
         }
@@ -732,7 +768,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"dayId\" : 1\r\n}",
+          "raw": "{\r\n    \"dayId\" : {{dayId}}\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -740,14 +776,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/days/1/meals",
+          "raw": "{{base_url}}/api/days/{{dayId}}/meals",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "days",
-            "1",
+            "{{dayId}}",
             "meals"
           ]
         }
@@ -789,7 +825,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"mealId\" : 1\r\n}",
+          "raw": "{\r\n    \"mealId\" : {{mealId}}\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -797,16 +833,16 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/days/1/meals/1",
+          "raw": "{{base_url}}/api/days/{{dayId}}/meals/{{mealId}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "days",
-            "1",
+            "{{dayId}}",
             "meals",
-            "1"
+            "{{mealId}}"
           ]
         }
       },
@@ -843,14 +879,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/api/weeks/1/days/all",
+          "raw": "{{base_url}}/api/weeks/{{weekId}}/days/all",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "weeks",
-            "1",
+            "{{weekId}}",
             "days",
             "all"
           ]
@@ -893,7 +929,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"weekId\" : 1\r\n}",
+          "raw": "{\r\n    \"weekId\" : {{weekId}}\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -901,14 +937,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/weeks/1/days",
+          "raw": "{{base_url}}/api/weeks/{{weekId}}/days",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "weeks",
-            "1",
+            "{{weekId}}",
             "days"
           ]
         }
@@ -1045,17 +1081,17 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"weekId\": 1\n}"
+          "raw": "{\n  \"weekId\": {{weekId}}\n}"
         },
         "url": {
-          "raw": "{{base_url}}/api/weeks/1",
+          "raw": "{{base_url}}/api/weeks/{{weekId}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "weeks",
-            "1"
+            "{{weekId}}"
           ]
         }
       },
@@ -1141,7 +1177,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"id\": {{id}},\n  \"servings\":3.0,\n  \"source\": \"{{source}}\",\n  \"mealId\": {{mealId}},\n  \"userId\": {{userId}},\n  \"fdcId\":{{fdcIdItem}}\n}",
+          "raw": "{\n  \"id\": {{foodItemId}},\n  \"servings\":3.0,\n  \"source\": \"{{source}}\",\n  \"mealId\": {{mealId}},\n  \"userId\": {{userId}},\n  \"fdcId\":{{fdcIdItem}}\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1149,16 +1185,16 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/meals/{{id}}/food-items/1",
+          "raw": "{{base_url}}/api/meals/{{mealId}}/food-items/{{foodItemId}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "meals",
-            "{{id}}",
+            "{{mealId}}",
             "food-items",
-            "1"
+            "{{foodItemId}}"
           ]
         }
       },
@@ -1315,10 +1351,10 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"id\": 1\n}"
+          "raw": "{\n  \"id\": {{foodItemId}}\n}"
         },
         "url": {
-          "raw": "{{base_url}}/api/meals/{{id}}/food-items/1",
+          "raw": "{{base_url}}/api/meals/{{id}}/food-items/{{foodItemId}}",
           "host": [
             "{{base_url}}"
           ],
@@ -1327,7 +1363,7 @@
             "meals",
             "{{id}}",
             "food-items",
-            "1"
+            "{{foodItemId}}"
           ]
         }
       },
@@ -1365,7 +1401,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"mealId\": 1\n}",
+          "raw": "{\n  \"mealId\": {{mealId}}\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1373,16 +1409,16 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/days/1/meals/1",
+          "raw": "{{base_url}}/api/days/{{dayId}}/meals/{{mealId}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "days",
-            "1",
+            "{{dayId}}",
             "meals",
-            "1"
+            "{{mealId}}"
           ]
         }
       },
@@ -1420,7 +1456,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"dayId\" : 2\r\n}",
+          "raw": "{\r\n    \"dayId\" : {{dayId}}\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1428,16 +1464,16 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/weeks/1/days/1",
+          "raw": "{{base_url}}/api/weeks/{{weekId}}/days/{{dayId}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "weeks",
-            "1",
+            "{{weekId}}",
             "days",
-            "1"
+            "{{dayId}}"
           ]
         }
       },
@@ -1475,7 +1511,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": " {\r\n    \"weekId\" : 1\r\n }",
+          "raw": " {\r\n    \"weekId\" : {{weekId}}\r\n }",
           "options": {
             "raw": {
               "language": "json"
@@ -1483,14 +1519,14 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/weeks/1",
+          "raw": "{{base_url}}/api/weeks/{{weekId}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "weeks",
-            "1"
+            "{{weekId}}"
           ]
         }
       },
