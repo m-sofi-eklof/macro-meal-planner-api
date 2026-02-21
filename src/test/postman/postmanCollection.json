@@ -1200,6 +1200,13 @@
       },
       "response": []
     },
+
+
+
+
+
+
+
     {
       "name": "Update a User",
       "event": [
@@ -1607,8 +1614,7 @@
     },
     {
       "key": "token",
-      "value": "",
-      "type": "default"
+      "value": ""
     }
   ]
 }

@@ -32,6 +32,8 @@ This project is under active development.
 - GET /api/weeks/{weekId} (Get a specific week with days)
 - GET /api/weeks (Get all weeks for logged-in user)
 - GET /api/weeks/current (Get or create the current week)
+- GET /api/weeks/{weekId}/next (Get or create the following week)
+- GET /api/weeks/{weekId}/prev (Get or create the week before)
 - DELETE /api/weeks/{weekId} (Delete a week by id)
 ### Days
 - POST /api/weeks/{weekId}/days (Get or create day from date)

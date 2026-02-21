@@ -5,6 +5,7 @@ import java.util.List;
 
 public record MealResponseDTO(
         Long id,
+        String name,
         String type,
         Integer orderIndex,
         LocalDate date,
