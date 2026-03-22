@@ -79,7 +79,7 @@ public class NutritionService{
                 .findFirst()
                 .orElse(null);
 
-        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories,protein);
+        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories, protein ,null);
     }
 
     private Integer extractNutrientValue(List<UsdaFoodNutrientDTO> nutrients, Integer nutrientId){
