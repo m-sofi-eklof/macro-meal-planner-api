@@ -49,11 +49,14 @@ public class NutritionService{
     }
 
     private NutritionSearchResponseDTO mapToNutritionResponseFromFoodItemDTO(UsdaFoodItemDTO food){
-
         Integer calories = extractNutrientValue(food.foodNutrients(), ENERGY_KCAL_ID);
         Double protein = extractNutrientValueDouble(food.foodNutrients(), PROTEIN_ID);
 
-        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories,protein);
+        String servingDescription = (food.servingSize() != null && food.servingSizeUnit() != null)
+                ? food.servingSize().intValue() + " " + food.servingSizeUnit().toLowerCase()
+                : "100 g";
+
+        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories, protein, servingDescription);
     }
 
     private NutritionSearchResponseDTO mapToNutritionResponseFromFoodDTO(UsdaFoodDTO food){

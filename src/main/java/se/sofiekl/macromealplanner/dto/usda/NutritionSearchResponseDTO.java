@@ -4,5 +4,6 @@ public record NutritionSearchResponseDTO(
         Long fdcId,
         String name,
         Integer calories,
-        Double protein
+        Double protein,
+        String servingDescription
 ) {}
