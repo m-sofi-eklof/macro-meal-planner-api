@@ -1,6 +1,7 @@
 package se.sofiekl.macromealplanner.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,8 @@ public class NutritionController {
 
     @GetMapping("/search")
     public ResponseEntity<List<NutritionSearchResponseDTO>> search(
-            @Valid
-            @RequestBody
-            NutritionSearchRequestDTO dto
-    ){
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(nutritionService.search(dto.query()));
+            @RequestParam @NotBlank String query
+    ) {
+        return ResponseEntity.ok(nutritionService.search(query));
     }
 }
