@@ -427,8 +427,8 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Response status code is 201\", function () {\r",
-              "    pm.response.to.have.status(201);\r",
+              "pm.test(\"Response status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
               "});\r",
               "\r",
               "const results = pm.response.json();\r",
@@ -449,9 +449,6 @@
           }
         }
       ],
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
       "request": {
         "auth": {
           "type": "bearer",
@@ -465,17 +462,8 @@
         },
         "method": "GET",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"query\" : \"Avocado, raw\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "{{base_url}}/api/nutrition/search",
+          "raw": "{{base_url}}/api/nutrition/search?query=Avocado%2C%20raw",
           "host": [
             "{{base_url}}"
           ],
@@ -483,6 +471,12 @@
             "api",
             "nutrition",
             "search"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "Avocado, raw"
+            }
           ]
         }
       },
@@ -525,7 +519,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"mealId\" : {{mealId}},\r\n    \"source\": \"USDA\",\r\n    \"fdcId\" : {{fdcId}},\r\n    \"servings\" : 1.0\r\n}",
+          "raw": "{\r\n    \"source\": \"USDA\",\r\n    \"fdcId\": {{fdcId}},\r\n    \"servings\": 1.0\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1200,13 +1194,6 @@
       },
       "response": []
     },
-
-
-
-
-
-
-
     {
       "name": "Update a User",
       "event": [
