@@ -39,6 +39,15 @@ public class UserController {
     }
 
     /**
+     * Get macro goals for the logged-in user
+     * @return MacroGoalsDTO with current goals
+     */
+    @GetMapping("/goals")
+    public ResponseEntity<MacroGoalsDTO> getMacroGoals() {
+        return ResponseEntity.ok(userService.getUserMacroGoals());
+    }
+
+    /**
      * Delete logged-in user
      * @return
      */

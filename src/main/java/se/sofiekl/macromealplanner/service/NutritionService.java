@@ -52,7 +52,9 @@ public class NutritionService{
         Integer calories = extractNutrientValue(food.foodNutrients(), ENERGY_KCAL_ID);
         Double protein = extractNutrientValueDouble(food.foodNutrients(), PROTEIN_ID);
 
-        String servingDescription = (food.servingSize() != null && food.servingSizeUnit() != null)
+        String servingDescription = (food.servingSize() != null
+                && food.servingSizeUnit() != null
+                && !food.servingSizeUnit().isBlank())
                 ? food.servingSize().intValue() + " " + food.servingSizeUnit().toLowerCase()
                 : "100 g";
 

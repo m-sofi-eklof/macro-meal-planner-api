@@ -91,6 +91,18 @@ public class UserService {
     }
 
     /**
+     * Get calorie and protein goals for the logged-in user
+     * @return MacroGoalsDTO with current goals
+     */
+    public MacroGoalsDTO getUserMacroGoals() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        return new MacroGoalsDTO(user.getCalorieGoal(), user.getProteinGoal());
+    }
+
+    /**
      * Delete account for logged in user
      */
     public void deleteUser() {
