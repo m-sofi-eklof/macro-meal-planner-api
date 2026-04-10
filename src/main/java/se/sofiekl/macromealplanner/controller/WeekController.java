@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.sofiekl.macromealplanner.dto.FoodItemResponseDTO;
 import se.sofiekl.macromealplanner.dto.WeekRequestDTO;
 import se.sofiekl.macromealplanner.dto.WeekResponseDTO;
+import se.sofiekl.macromealplanner.service.FoodItemService;
 import se.sofiekl.macromealplanner.service.WeekService;
 
 import java.util.List;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class WeekController {
 
     private final WeekService weekService;
+    private final FoodItemService foodItemService;
 
-    public WeekController(WeekService weekService) {
+    public WeekController(WeekService weekService, FoodItemService foodItemService) {
         this.weekService = weekService;
+        this.foodItemService = foodItemService;
     }
 
 
@@ -75,6 +79,16 @@ public class WeekController {
     @GetMapping("/{weekId}/prev")
     public ResponseEntity<WeekResponseDTO> getPreviousWeek(@PathVariable Long weekId){
         return ResponseEntity.ok(weekService.getPrev(weekId));
+    }
+
+    /**
+     * Get all food items for a week
+     * @param weekId The id of the Week
+     * @return A list of food response dto
+     */
+    @GetMapping("/{weekId}/foods")
+    public ResponseEntity<List<FoodItemResponseDTO>> getAllFoodsForWeek(@PathVariable Long weekId){
+        return ResponseEntity.ok(foodItemService.getAllFoodItemsForWeek(weekId));
     }
 
     @DeleteMapping("/{weekId}")

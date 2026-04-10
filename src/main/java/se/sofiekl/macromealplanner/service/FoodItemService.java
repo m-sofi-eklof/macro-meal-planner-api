@@ -4,19 +4,20 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import se.sofiekl.macromealplanner.dto.FoodItemRequestDTO;
 import se.sofiekl.macromealplanner.dto.FoodItemResponseDTO;
 import se.sofiekl.macromealplanner.dto.usda.NutritionSearchResponseDTO;
 import se.sofiekl.macromealplanner.mapper.FoodItemMapper;
-import se.sofiekl.macromealplanner.model.FoodItem;
-import se.sofiekl.macromealplanner.model.FoodSource;
-import se.sofiekl.macromealplanner.model.Meal;
-import se.sofiekl.macromealplanner.model.User;
+import se.sofiekl.macromealplanner.model.*;
 import se.sofiekl.macromealplanner.repository.FoodItemRepository;
 import se.sofiekl.macromealplanner.repository.MealRepository;
 import se.sofiekl.macromealplanner.repository.UserRepository;
 
 import org.springframework.security.access.AccessDeniedException;
+import se.sofiekl.macromealplanner.repository.WeekRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,13 +29,15 @@ public class FoodItemService {
     private final FoodItemMapper mapper;
     private final UserRepository userRepository;
     private final NutritionService nutritionService;
+    private final WeekRepository weekRepository;
 
-    public FoodItemService(FoodItemRepository foodItemRepository, MealRepository mealRepository, FoodItemMapper mapper, UserRepository userRepository, NutritionService nutritionService) {
+    public FoodItemService(FoodItemRepository foodItemRepository, MealRepository mealRepository, FoodItemMapper mapper, UserRepository userRepository, NutritionService nutritionService, WeekRepository weekRepository) {
         this.foodItemRepository = foodItemRepository;
         this.mealRepository = mealRepository;
         this.mapper = mapper;
         this.userRepository = userRepository;
         this.nutritionService = nutritionService;
+        this.weekRepository = weekRepository;
     }
 
     /**
@@ -198,6 +201,38 @@ public class FoodItemService {
 
         return mapper.toFoodItemResponseDTO(updated);
     }
+
+    /**
+     * Gets all food items in ll days and meals for a specific week
+     * @param weekID The id of the week
+     * @return The food item's data av dto
+     */
+    @Transactional
+    public List<FoodItemResponseDTO> getAllFoodItemsForWeek(Long weekID){
+        //get user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        //get week
+        Week week = weekRepository.findByIdAndUserId(weekID, user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Week not found with id: " + weekID));
+
+        //get all food items
+        List<Day> days = week.getDays();
+        List<FoodItem> foods = new ArrayList<>();
+        for (Day day : days){
+            day.getMeals().forEach(meal -> {
+                foods.addAll(meal.getFoodItems());
+            });
+        }
+
+        //map and return
+        return  foods.stream()
+                .map(mapper::toFoodItemResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * Delete a FoodItem
