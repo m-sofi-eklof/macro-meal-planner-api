@@ -52,6 +52,18 @@ public class User {
     @Column(name= "calorie_goal")
     private Integer calorieGoal;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private Integer age;
+
+    private Double weightKg;
+
+    private Double heightCm;
+
+    @Enumerated(EnumType.STRING)
+    private ActivityLevel activityLevel;
+
     /**
      * The User's Weeks
      */

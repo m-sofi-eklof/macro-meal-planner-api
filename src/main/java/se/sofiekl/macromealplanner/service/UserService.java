@@ -5,6 +5,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import se.sofiekl.macromealplanner.dto.BodyStatsDTO;
+import se.sofiekl.macromealplanner.dto.MacroCalculationRequestDTO;
+import se.sofiekl.macromealplanner.dto.MacroCalculationResponseDTO;
 import se.sofiekl.macromealplanner.dto.MacroGoalsDTO;
 import se.sofiekl.macromealplanner.dto.userAndLogin.AuthResponseDTO;
 import se.sofiekl.macromealplanner.dto.userAndLogin.UserRequestDTO;
@@ -100,6 +103,64 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
 
         return new MacroGoalsDTO(user.getCalorieGoal(), user.getProteinGoal());
+    }
+
+    /**
+     * Get body stats for the logged-in user
+     */
+    public BodyStatsDTO getBodyStats() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        return new BodyStatsDTO(user.getGender(), user.getAge(), user.getWeightKg(), user.getHeightCm(), user.getActivityLevel());
+    }
+
+    /**
+     * Save body stats for the logged-in user
+     */
+    @Transactional
+    public BodyStatsDTO saveBodyStats(BodyStatsDTO dto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        user.setGender(dto.gender());
+        user.setAge(dto.age());
+        user.setWeightKg(dto.weightKg());
+        user.setHeightCm(dto.heightCm());
+        user.setActivityLevel(dto.activityLevel());
+        User saved = userRepository.save(user);
+
+        return new BodyStatsDTO(saved.getGender(), saved.getAge(), saved.getWeightKg(), saved.getHeightCm(), saved.getActivityLevel());
+    }
+
+    /**
+     * Calculate recommended macros based on body stats and goal — does not persist anything
+     */
+    public MacroCalculationResponseDTO calculateMacros(MacroCalculationRequestDTO req) {
+        double bmrRaw = (10 * req.weightKg()) + (6.25 * req.heightCm()) - (5 * req.age());
+        double bmr = switch (req.gender()) {
+            case MALE -> bmrRaw + 5;
+            case FEMALE -> bmrRaw - 161;
+        };
+
+        double tdee = bmr * req.activityLevel().getMultiplier();
+
+        int adjustedCalories = switch (req.goal()) {
+            case BULK -> (int) Math.round(tdee + 400);
+            case RECOMP -> (int) Math.round(tdee);
+            case CUT -> (int) Math.round(tdee - 500);
+        };
+
+        double proteinMultiplier = switch (req.goal()) {
+            case BULK -> 1.8;
+            case RECOMP -> 2.0;
+            case CUT -> 2.2;
+        };
+        double protein = Math.round(proteinMultiplier * req.weightKg() * 10.0) / 10.0;
+
+        return new MacroCalculationResponseDTO(adjustedCalories, protein, (int) tdee, (int) bmr);
     }
 
     /**

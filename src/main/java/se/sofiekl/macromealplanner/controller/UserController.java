@@ -3,6 +3,9 @@ package se.sofiekl.macromealplanner.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.sofiekl.macromealplanner.dto.BodyStatsDTO;
+import se.sofiekl.macromealplanner.dto.MacroCalculationRequestDTO;
+import se.sofiekl.macromealplanner.dto.MacroCalculationResponseDTO;
 import se.sofiekl.macromealplanner.dto.MacroGoalsDTO;
 import se.sofiekl.macromealplanner.dto.userAndLogin.AuthResponseDTO;
 import se.sofiekl.macromealplanner.dto.userAndLogin.UserRequestDTO;
@@ -45,6 +48,30 @@ public class UserController {
     @GetMapping("/goals")
     public ResponseEntity<MacroGoalsDTO> getMacroGoals() {
         return ResponseEntity.ok(userService.getUserMacroGoals());
+    }
+
+    /**
+     * Get body stats for the logged-in user
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<BodyStatsDTO> getBodyStats() {
+        return ResponseEntity.ok(userService.getBodyStats());
+    }
+
+    /**
+     * Save body stats for the logged-in user
+     */
+    @PutMapping("/stats")
+    public ResponseEntity<BodyStatsDTO> saveBodyStats(@RequestBody BodyStatsDTO dto) {
+        return ResponseEntity.ok(userService.saveBodyStats(dto));
+    }
+
+    /**
+     * Calculate recommended macros based on provided stats and goal
+     */
+    @PostMapping("/calculate-macros")
+    public ResponseEntity<MacroCalculationResponseDTO> calculateMacros(@RequestBody MacroCalculationRequestDTO dto) {
+        return ResponseEntity.ok(userService.calculateMacros(dto));
     }
 
     /**
