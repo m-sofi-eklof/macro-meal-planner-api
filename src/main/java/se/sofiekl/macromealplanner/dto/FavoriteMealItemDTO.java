@@ -9,6 +9,5 @@ public record FavoriteMealItemDTO(
         Long fdcId,
         Integer calories,
         Double protein,
-        Double servings,
-        String servingDescription
+        Double grams
 ) {}

@@ -77,8 +77,7 @@ public class FavoriteMealService {
                     item.setFdcId(foodItem.getFdcId());
                     item.setCalories(foodItem.getCalories());
                     item.setProtein(foodItem.getProtein());
-                    item.setServings(foodItem.getServings());
-                    item.setServingDescription(null);
+                    item.setGrams(foodItem.getGrams());
                     return item;
                 })
                 .collect(Collectors.toList());
@@ -127,7 +126,7 @@ public class FavoriteMealService {
                     foodItem.setFdcId(favItem.getFdcId());
                     foodItem.setCalories(favItem.getCalories());
                     foodItem.setProtein(favItem.getProtein());
-                    foodItem.setServings(favItem.getServings());
+                    foodItem.setGrams(favItem.getGrams());
                     return foodItem;
                 })
                 .collect(Collectors.toList());
@@ -148,8 +147,7 @@ public class FavoriteMealService {
                         item.getFdcId(),
                         item.getCalories(),
                         item.getProtein(),
-                        item.getServings(),
-                        item.getServingDescription()
+                        item.getGrams()
                 ))
                 .collect(Collectors.toList());
 

@@ -52,13 +52,7 @@ public class NutritionService{
         Integer calories = extractNutrientValue(food.foodNutrients(), ENERGY_KCAL_ID);
         Double protein = extractNutrientValueDouble(food.foodNutrients(), PROTEIN_ID);
 
-        String servingDescription = (food.servingSize() != null
-                && food.servingSizeUnit() != null
-                && !food.servingSizeUnit().isBlank())
-                ? food.servingSize().intValue() + " " + food.servingSizeUnit().toLowerCase()
-                : "100 g";
-
-        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories, protein, servingDescription);
+        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories, protein);
     }
 
     private NutritionSearchResponseDTO mapToNutritionResponseFromFoodDTO(UsdaFoodDTO food){
@@ -81,7 +75,7 @@ public class NutritionService{
                 .findFirst()
                 .orElse(null);
 
-        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories, protein ,null);
+        return new NutritionSearchResponseDTO(food.fdcId(), food.description(), calories, protein);
     }
 
     private Integer extractNutrientValue(List<UsdaFoodNutrientDTO> nutrients, Integer nutrientId){

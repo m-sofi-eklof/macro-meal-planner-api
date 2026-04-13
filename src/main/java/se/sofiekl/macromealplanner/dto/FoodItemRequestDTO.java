@@ -13,7 +13,7 @@ public record FoodItemRequestDTO(
         FoodSource source,
 
         @NotNull(message = "Quantity can not be null")
-        Double servings,
+        Double grams,
 
         //fields for manual input source
         String name,

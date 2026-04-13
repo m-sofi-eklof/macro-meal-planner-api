@@ -78,11 +78,11 @@ public class FoodItemService {
                 throw new EntityNotFoundException("Nutrition not found for food item with id: " + request.fdcId());
             }
 
-            foodItem = mapper.toFoodItemUSDA(nutrition, meal, user, request.servings());
+            foodItem = mapper.toFoodItemUSDA(nutrition, meal, user, request.grams());
 
-            //update calories/protein to fit quantity
-            Integer calories = (int) (request.servings() * nutrition.calories());
-            Double protein = request.servings() * nutrition.protein();
+            //scale calories/protein to logged grams (values are per 100g)
+            Integer calories = (int) ((request.grams() / 100.0) * nutrition.calories());
+            Double protein = (request.grams() / 100.0) * nutrition.protein();
 
             foodItem.setCalories(calories);
             foodItem.setProtein(protein);
@@ -172,18 +172,18 @@ public class FoodItemService {
 
         //For USDA
         if(foodItem.getSource() == FoodSource.USDA){
-            //Update nutrition from updated servings
+            //Update nutrition scaled to updated grams
             NutritionSearchResponseDTO nutrition = nutritionService.getByFdcId(dto.fdcId());
             if(nutrition == null){
                 throw new EntityNotFoundException("Nutrition information found for requested USDA Food Data Central food item");
             }
-            Double protein = nutrition.protein()*dto.servings();
-            Integer calories = (int) (nutrition.calories()*dto.servings());
+            Double protein = (dto.grams() / 100.0) * nutrition.protein();
+            Integer calories = (int) ((dto.grams() / 100.0) * nutrition.calories());
 
             //set updates
             foodItem.setCalories(calories);
             foodItem.setProtein(protein);
-            foodItem.setServings(dto.servings());
+            foodItem.setGrams(dto.grams());
 
 
         //for MANUAL
@@ -191,7 +191,7 @@ public class FoodItemService {
             foodItem.setName(dto.name());
             foodItem.setCalories(dto.calories());
             foodItem.setProtein(dto.protein());
-            foodItem.setServings(dto.servings());
+            foodItem.setGrams(dto.grams());
             foodItem.setSource(foodItem.getSource());
         }else{
             throw new IllegalArgumentException("Food source  is null or not supported");

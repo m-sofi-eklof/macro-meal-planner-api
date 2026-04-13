@@ -62,8 +62,7 @@ public class FavoriteService {
         favorite.setFdcId(dto.fdcId());
         favorite.setCalories(dto.calories());
         favorite.setProtein(dto.protein());
-        favorite.setServings(dto.servings());
-        favorite.setServingDescription(dto.servingDescription());
+        favorite.setGrams(dto.grams() != null ? dto.grams() : 100.0);
 
         return toDTO(favoriteRepository.save(favorite));
     }
@@ -102,7 +101,7 @@ public class FavoriteService {
         foodItem.setFdcId(favorite.getFdcId());
         foodItem.setCalories(favorite.getCalories());
         foodItem.setProtein(favorite.getProtein());
-        foodItem.setServings(favorite.getServings());
+        foodItem.setGrams(favorite.getGrams());
         foodItem.setMeal(meal);
         foodItem.setUser(user);
 
@@ -119,8 +118,7 @@ public class FavoriteService {
                 favorite.getFdcId(),
                 favorite.getCalories(),
                 favorite.getProtein(),
-                favorite.getServings(),
-                favorite.getServingDescription()
+                favorite.getGrams()
         );
     }
 }

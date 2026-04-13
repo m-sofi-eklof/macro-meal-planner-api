@@ -5,5 +5,5 @@ public record FoodItemSummaryDTO(
         String name,
         Integer calories,
         Double protein,
-        Double servings
+        Double grams
 ) {}

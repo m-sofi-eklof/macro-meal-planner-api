@@ -36,7 +36,5 @@ public class FavoriteMealItem {
     private Double protein;
 
     @Column(nullable = false)
-    private Double servings;
-
-    private String servingDescription;
+    private Double grams;
 }

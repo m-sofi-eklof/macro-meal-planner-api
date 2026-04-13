@@ -24,7 +24,7 @@ public class FoodItemMapper {
         return new FoodItemResponseDTO(
                 foodItem.getId(),
                 foodItem.getName(),
-                foodItem.getServings(),
+                foodItem.getGrams(),
                 foodItem.getCalories(),
                 foodItem.getProtein(),
                 foodItem.getSource(),
@@ -40,13 +40,13 @@ public class FoodItemMapper {
         foodItem.setCalories(dto.calories());
         foodItem.setProtein(dto.protein());
         foodItem.setSource(FoodSource.MANUAL);
-        foodItem.setServings(dto.servings());
+        foodItem.setGrams(dto.grams());
         foodItem.setMeal(meal);
         foodItem.setUser(user);
         return foodItem;
     }
 
-    public FoodItem toFoodItemUSDA(NutritionSearchResponseDTO dto, Meal meal, User user, Double servings){
+    public FoodItem toFoodItemUSDA(NutritionSearchResponseDTO dto, Meal meal, User user, Double grams){
         FoodItem foodItem = new FoodItem();
         foodItem.setSource(FoodSource.USDA);
         foodItem.setMeal(meal);
@@ -54,7 +54,7 @@ public class FoodItemMapper {
         foodItem.setProtein(dto.protein());
         foodItem.setCalories(dto.calories());
         foodItem.setName(dto.name());
-        foodItem.setServings(servings);
+        foodItem.setGrams(grams);
         foodItem.setFdcId(dto.fdcId());
         return foodItem;
     }

@@ -5,7 +5,7 @@ import se.sofiekl.macromealplanner.model.FoodSource;
 public record FoodItemResponseDTO(
         Long id,
         String name,
-        Double servings,
+        Double grams,
         Integer calories,
         Double protein,
         FoodSource source,
