@@ -2,16 +2,6 @@
 Backend API for a macro-focused weekly meal planner.
 Plan meals around personal goals and track **calories** and **protein** per meal, day, and week.
 
-## Screenshots
-
-| Login | Goals | Add meal items |
-|---|---|---|
-| <img src="./screenshots/login.png" alt="Login screen" width="220" /> | <img src="./screenshots/goals.png" alt="Goals and macro calculator screen" width="220" /> | <img src="./screenshots/adding.png" alt="Meal creation screen" width="220" /> |
-
-| Weekly planner | Shopping list |
-|---|---|
-| <img src="./screenshots/planner.png" alt="Weekly meal planner screen" width="220" /> | <img src="./screenshots/shopping.png" alt="Weekly shopping list screen" width="220" /> |
-
 ## Built with
 - Java 21
 - Spring Boot
