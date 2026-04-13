@@ -13,6 +13,22 @@ Plan meals around personal goals and track **calories** and **protein** per meal
 ## Status
 Active development.
 
+## Architecture & Core Implementation
+- Designed and implemented the backend architecture, including:
+  - Security filter and authentication flow (Spring Security + JWT)
+  - REST API and external client integration (USDA FoodData Central)
+  - Database schema and core domain entities
+  - Containerization and deployment with Docker
+- Built all critical business logic and core system functionality manually
+
+## Feature Extensions
+- Designed additional features such as:
+  - Favourite food items and meal templates
+  - Automated macro calculation based on user stats (BMR/TDEE)
+- Defined specifications and expected behavior prior to implementation
+- Implemented using AI-assisted development to accelerate delivery while preserving architectural consistency
+
+
 ### Roadmap
 - [x] Core model (User, Week, Day, Meal, FoodItem)
 - [x] Local dev setup with PostgreSQL (docker-compose)
